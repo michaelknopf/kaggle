@@ -2,5 +2,5 @@
 /.git/
 /.venv/
 
-/data/
+/housing_prices/data/
 __pycache__/

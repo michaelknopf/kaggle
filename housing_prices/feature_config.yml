@@ -1,524 +1,525 @@
-- name: MSSubClass
-  type: categorical
-  categories:
-    - '20'
-    - '30'
-    - '40'
-    - '45'
-    - '50'
-    - '60'
-    - '70'
-    - '75'
-    - '80'
-    - '85'
-    - '90'
-    - '120'
-    - '150'
-    - '160'
-    - '180'
-    - '190'
-- name: MSZoning
-  type: categorical
-  categories:
-    - A
-    - C
-    - FV
-    - I
-    - RH
-    - RL
-    - RP
-    - RM
-- name: LotFrontage
-  type: numerical
-- name: LotArea
-  type: numerical
-- name: Street
-  type: ordinal
-  categories:
-    - Grvl
-    - Pave
-- name: Alley
-  type: categorical
-  categories:
-    - NA
-    - Grvl
-    - Pave
-- name: LotShape
-  type: ordinal
-  categories:
-    - Reg
-    - IR1
-    - IR2
-    - IR3
-- name: LandContour
-  type: categorical
-  categories:
-    - Lvl
-    - Bnk
-    - HLS
-    - Low
-- name: Utilities
-  type: ordinal
-  categories:
-    - ELO
-    - NoSeWa
-    - NoSewr
-    - AllPub
-- name: LotConfig
-  type: categorical
-  categories:
-    - Inside
-    - Corner
-    - CulDSac
-    - FR2
-    - FR3
-- name: LandSlope
-  type: ordinal
-  categories:
-    - Sev
-    - Mod
-    - Gtl
-- name: Neighborhood
-  type: categorical
-  categories:
-    - Blmngtn
-    - Blueste
-    - BrDale
-    - BrkSide
-    - ClearCr
-    - CollgCr
-    - Crawfor
-    - Edwards
-    - Gilbert
-    - IDOTRR
-    - MeadowV
-    - Mitchel
-    - Names
-    - NoRidge
-    - NPkVill
-    - NridgHt
-    - NWAmes
-    - OldTown
-    - SWISU
-    - Sawyer
-    - SawyerW
-    - Somerst
-    - StoneBr
-    - Timber
-    - Veenker
-- name: Condition1
-  type: categorical
-  categories:
-    - Artery
-    - Feedr
-    - Norm
-    - RRNn
-    - RRAn
-    - PosN
-    - PosA
-    - RRNe
-    - RRAe
-- name: Condition2
-  type: categorical
-  categories:
-    - Artery
-    - Feedr
-    - Norm
-    - RRNn
-    - RRAn
-    - PosN
-    - PosA
-    - RRNe
-    - RRAe
-- name: BldgType
-  type: categorical
-  categories:
-    - 1Fam
-    - 2FmCon
-    - Duplx
-    - TwnhsE
-    - TwnhsI
-- name: HouseStyle
-  type: categorical
-  categories:
-    - 1Story
-    - 1.5Fin
-    - 1.5Unf
-    - 2Story
-    - 2.5Fin
-    - 2.5Unf
-    - SFoyer
-    - SLvl
-- name: OverallQual
-  type: ordinal
-  categories:
-    - '1'
-    - '2'
-    - '3'
-    - '4'
-    - '5'
-    - '6'
-    - '7'
-    - '8'
-    - '9'
-    - '10'
-- name: OverallCond
-  type: ordinal
-  categories:
-    - '1'
-    - '2'
-    - '3'
-    - '4'
-    - '5'
-    - '6'
-    - '7'
-    - '8'
-    - '9'
-    - '10'
-- name: YearBuilt
-  type: numerical
-- name: YearRemodAdd
-  type: numerical
-- name: RoofStyle
-  type: categorical
-  categories:
-    - Flat
-    - Gable
-    - Gambrel
-    - Hip
-    - Mansard
-    - Shed
-- name: RoofMatl
-  type: categorical
-  categories:
-    - ClyTile
-    - CompShg
-    - Membran
-    - Metal
-    - Roll
-    - Tar&Grv
-    - WdShake
-    - WdShngl
-- name: Exterior1st
-  type: categorical
-  categories:
-    - AsbShng
-    - AsphShn
-    - BrkComm
-    - BrkFace
-    - CBlock
-    - CemntBd
-    - HdBoard
-    - ImStucc
-    - MetalSd
-    - Other
-    - Plywood
-    - PreCast
-    - Stone
-    - Stucco
-    - VinylSd
-    - Wd Sdng
-    - WdShing
-- name: Exterior2nd
-  type: categorical
-  categories:
-    - AsbShng
-    - AsphShn
-    - BrkComm
-    - BrkFace
-    - CBlock
-    - CemntBd
-    - HdBoard
-    - ImStucc
-    - MetalSd
-    - Other
-    - Plywood
-    - PreCast
-    - Stone
-    - Stucco
-    - VinylSd
-    - Wd Sdng
-    - WdShing
-- name: MasVnrType
-  type: categorical
-  categories:
-    - BrkCmn
-    - BrkFace
-    - CBlock
-    - None
-    - Stone
-- name: MasVnrArea
-  type: numerical
-- name: ExterQual
-  type: ordinal
-  categories:
-    - Po
-    - Fa
-    - TA
-    - Gd
-    - Ex
-- name: ExterCond
-  type: ordinal
-  categories:
-    - Po
-    - Fa
-    - TA
-    - Gd
-    - Ex
-- name: Foundation
-  type: categorical
-  categories:
-    - BrkTil
-    - CBlock
-    - PConc
-    - Slab
-    - Stone
-    - Wood
-- name: BsmtQual
-  type: ordinal
-  categories:
-    - NA
-    - Po
-    - Fa
-    - TA
-    - Gd
-    - Ex
-- name: BsmtCond
-  type: ordinal
-  categories:
-    - NA
-    - Po
-    - Fa
-    - TA
-    - Gd
-    - Ex
-- name: BsmtExposure
-  type: ordinal
-  categories:
-    - NA
-    - 'No'
-    - Mn
-    - Av
-    - Gd
-- name: BsmtFinType1
-  type: ordinal
-  categories:
-    - NA
-    - Unf
-    - LwQ
-    - Rec
-    - BLQ
-    - ALQ
-    - GLQ
-- name: BsmtFinSF1
-  type: numerical
-- name: BsmtFinType2
-  type: ordinal
-  categories:
-    - NA
-    - Unf
-    - LwQ
-    - Rec
-    - BLQ
-    - ALQ
-    - GLQ
-- name: BsmtFinSF2
-  type: numerical
-- name: BsmtUnfSF
-  type: numerical
-- name: TotalBsmtSF
-  type: numerical
-- name: Heating
-  type: categorical
-  categories:
-    - Floor
-    - GasA
-    - GasW
-    - Grav
-    - OthW
-    - Wall
-- name: HeatingQC
-  type: ordinal
-  categories:
-    - Po
-    - Fa
-    - TA
-    - Gd
-    - Ex
-- name: CentralAir
-  type: categorical
-  categories:
-    - N
-    - Y
-- name: Electrical
-  type: categorical
-  categories:
-    - Mix
-    - FuseP
-    - FuseA
-    - FuseF
-    - SBrkr
-- name: 1stFlrSF
-  type: numerical
-- name: 2ndFlrSF
-  type: numerical
-- name: LowQualFinSF
-  type: numerical
-- name: GrLivArea
-  type: numerical
-- name: BsmtFullBath
-  type: numerical
-- name: BsmtHalfBath
-  type: numerical
-- name: FullBath
-  type: numerical
-- name: HalfBath
-  type: numerical
-- name: BedroomAbvGr
-  type: numerical
-- name: KitchenAbvGr
-  type: numerical
-- name: KitchenQual
-  type: ordinal
-  categories:
-    - Po
-    - Fa
-    - TA
-    - Gd
-    - Ex
-- name: TotRmsAbvGrd
-  type: numerical
-- name: Functional
-  type: ordinal
-  categories:
-    - Sal
-    - Sev
-    - Maj2
-    - Maj1
-    - Mod
-    - Min2
-    - Min1
-    - Typ
-- name: Fireplaces
-  type: numerical
-- name: FireplaceQu
-  type: ordinal
-  categories:
-    - NA
-    - Po
-    - Fa
-    - TA
-    - Gd
-    - Ex
-- name: GarageType
-  type: categorical
-  categories:
-    - 2Types
-    - Attchd
-    - Basment
-    - BuiltIn
-    - CarPort
-    - Detchd
-    - NA
-- name: GarageYrBlt
-  type: numerical
-- name: GarageFinish
-  type: ordinal
-  categories:
-    - NA
-    - Unf
-    - RFn
-    - Fin
-- name: GarageCars
-  type: numerical
-- name: GarageArea
-  type: numerical
-- name: GarageQual
-  type: ordinal
-  categories:
-    - NA
-    - Po
-    - Fa
-    - TA
-    - Gd
-    - Ex
-- name: GarageCond
-  type: ordinal
-  categories:
-    - NA
-    - Po
-    - Fa
-    - TA
-    - Gd
-    - Ex
-- name: PavedDrive
-  type: ordinal
-  categories:
-    - N
-    - P
-    - Y
-- name: WoodDeckSF
-  type: numerical
-- name: OpenPorchSF
-  type: numerical
-- name: EnclosedPorch
-  type: numerical
-- name: 3SsnPorch
-  type: numerical
-- name: ScreenPorch
-  type: numerical
-- name: PoolArea
-  type: numerical
-- name: PoolQC
-  type: ordinal
-  categories:
-    - NA
-    - Fa
-    - TA
-    - Gd
-    - Ex
-- name: Fence
-  type: ordinal
-  categories:
-    - NA
-    - MnWw
-    - GdWo
-    - MnPrv
-    - GdPrv
-- name: MiscFeature
-  type: categorical
-  categories:
-    - NA
-    - Elev
-    - Gar2
-    - Othr
-    - Shed
-    - TenC
-- name: MiscVal
-  type: numerical
-- name: MoSold
-  type: numerical
-- name: YrSold
-  type: numerical
-- name: SaleType
-  type: categorical
-  categories:
-    - WD
-    - CWD
-    - VWD
-    - New
-    - COD
-    - Con
-    - ConLw
-    - ConLI
-    - ConLD
-    - Oth
-- name: SaleCondition
-  type: categorical
-  categories:
-    - Normal
-    - Abnorml
-    - AdjLand
-    - Alloca
-    - Family
-    - Partial
+features:
+  - name: MSSubClass
+    type: categorical
+    categories:
+      - '20'
+      - '30'
+      - '40'
+      - '45'
+      - '50'
+      - '60'
+      - '70'
+      - '75'
+      - '80'
+      - '85'
+      - '90'
+      - '120'
+      - '150'
+      - '160'
+      - '180'
+      - '190'
+  - name: MSZoning
+    type: categorical
+    categories:
+      - A
+      - C
+      - FV
+      - I
+      - RH
+      - RL
+      - RP
+      - RM
+  - name: LotFrontage
+    type: numerical
+  - name: LotArea
+    type: numerical
+  - name: Street
+    type: ordinal
+    categories:
+      - Grvl
+      - Pave
+  - name: Alley
+    type: categorical
+    categories:
+      - NA
+      - Grvl
+      - Pave
+  - name: LotShape
+    type: ordinal
+    categories:
+      - Reg
+      - IR1
+      - IR2
+      - IR3
+  - name: LandContour
+    type: categorical
+    categories:
+      - Lvl
+      - Bnk
+      - HLS
+      - Low
+  - name: Utilities
+    type: ordinal
+    categories:
+      - ELO
+      - NoSeWa
+      - NoSewr
+      - AllPub
+  - name: LotConfig
+    type: categorical
+    categories:
+      - Inside
+      - Corner
+      - CulDSac
+      - FR2
+      - FR3
+  - name: LandSlope
+    type: ordinal
+    categories:
+      - Sev
+      - Mod
+      - Gtl
+  - name: Neighborhood
+    type: categorical
+    categories:
+      - Blmngtn
+      - Blueste
+      - BrDale
+      - BrkSide
+      - ClearCr
+      - CollgCr
+      - Crawfor
+      - Edwards
+      - Gilbert
+      - IDOTRR
+      - MeadowV
+      - Mitchel
+      - Names
+      - NoRidge
+      - NPkVill
+      - NridgHt
+      - NWAmes
+      - OldTown
+      - SWISU
+      - Sawyer
+      - SawyerW
+      - Somerst
+      - StoneBr
+      - Timber
+      - Veenker
+  - name: Condition1
+    type: categorical
+    categories:
+      - Artery
+      - Feedr
+      - Norm
+      - RRNn
+      - RRAn
+      - PosN
+      - PosA
+      - RRNe
+      - RRAe
+  - name: Condition2
+    type: categorical
+    categories:
+      - Artery
+      - Feedr
+      - Norm
+      - RRNn
+      - RRAn
+      - PosN
+      - PosA
+      - RRNe
+      - RRAe
+  - name: BldgType
+    type: categorical
+    categories:
+      - 1Fam
+      - 2FmCon
+      - Duplx
+      - TwnhsE
+      - TwnhsI
+  - name: HouseStyle
+    type: categorical
+    categories:
+      - 1Story
+      - 1.5Fin
+      - 1.5Unf
+      - 2Story
+      - 2.5Fin
+      - 2.5Unf
+      - SFoyer
+      - SLvl
+  - name: OverallQual
+    type: ordinal
+    categories:
+      - '1'
+      - '2'
+      - '3'
+      - '4'
+      - '5'
+      - '6'
+      - '7'
+      - '8'
+      - '9'
+      - '10'
+  - name: OverallCond
+    type: ordinal
+    categories:
+      - '1'
+      - '2'
+      - '3'
+      - '4'
+      - '5'
+      - '6'
+      - '7'
+      - '8'
+      - '9'
+      - '10'
+  - name: YearBuilt
+    type: numerical
+  - name: YearRemodAdd
+    type: numerical
+  - name: RoofStyle
+    type: categorical
+    categories:
+      - Flat
+      - Gable
+      - Gambrel
+      - Hip
+      - Mansard
+      - Shed
+  - name: RoofMatl
+    type: categorical
+    categories:
+      - ClyTile
+      - CompShg
+      - Membran
+      - Metal
+      - Roll
+      - Tar&Grv
+      - WdShake
+      - WdShngl
+  - name: Exterior1st
+    type: categorical
+    categories:
+      - AsbShng
+      - AsphShn
+      - BrkComm
+      - BrkFace
+      - CBlock
+      - CemntBd
+      - HdBoard
+      - ImStucc
+      - MetalSd
+      - Other
+      - Plywood
+      - PreCast
+      - Stone
+      - Stucco
+      - VinylSd
+      - Wd Sdng
+      - WdShing
+  - name: Exterior2nd
+    type: categorical
+    categories:
+      - AsbShng
+      - AsphShn
+      - BrkComm
+      - BrkFace
+      - CBlock
+      - CemntBd
+      - HdBoard
+      - ImStucc
+      - MetalSd
+      - Other
+      - Plywood
+      - PreCast
+      - Stone
+      - Stucco
+      - VinylSd
+      - Wd Sdng
+      - WdShing
+  - name: MasVnrType
+    type: categorical
+    categories:
+      - BrkCmn
+      - BrkFace
+      - CBlock
+      - None
+      - Stone
+  - name: MasVnrArea
+    type: numerical
+  - name: ExterQual
+    type: ordinal
+    categories:
+      - Po
+      - Fa
+      - TA
+      - Gd
+      - Ex
+  - name: ExterCond
+    type: ordinal
+    categories:
+      - Po
+      - Fa
+      - TA
+      - Gd
+      - Ex
+  - name: Foundation
+    type: categorical
+    categories:
+      - BrkTil
+      - CBlock
+      - PConc
+      - Slab
+      - Stone
+      - Wood
+  - name: BsmtQual
+    type: ordinal
+    categories:
+      - NA
+      - Po
+      - Fa
+      - TA
+      - Gd
+      - Ex
+  - name: BsmtCond
+    type: ordinal
+    categories:
+      - NA
+      - Po
+      - Fa
+      - TA
+      - Gd
+      - Ex
+  - name: BsmtExposure
+    type: ordinal
+    categories:
+      - NA
+      - 'No'
+      - Mn
+      - Av
+      - Gd
+  - name: BsmtFinType1
+    type: ordinal
+    categories:
+      - NA
+      - Unf
+      - LwQ
+      - Rec
+      - BLQ
+      - ALQ
+      - GLQ
+  - name: BsmtFinSF1
+    type: numerical
+  - name: BsmtFinType2
+    type: ordinal
+    categories:
+      - NA
+      - Unf
+      - LwQ
+      - Rec
+      - BLQ
+      - ALQ
+      - GLQ
+  - name: BsmtFinSF2
+    type: numerical
+  - name: BsmtUnfSF
+    type: numerical
+  - name: TotalBsmtSF
+    type: numerical
+  - name: Heating
+    type: categorical
+    categories:
+      - Floor
+      - GasA
+      - GasW
+      - Grav
+      - OthW
+      - Wall
+  - name: HeatingQC
+    type: ordinal
+    categories:
+      - Po
+      - Fa
+      - TA
+      - Gd
+      - Ex
+  - name: CentralAir
+    type: categorical
+    categories:
+      - N
+      - Y
+  - name: Electrical
+    type: categorical
+    categories:
+      - Mix
+      - FuseP
+      - FuseA
+      - FuseF
+      - SBrkr
+  - name: 1stFlrSF
+    type: numerical
+  - name: 2ndFlrSF
+    type: numerical
+  - name: LowQualFinSF
+    type: numerical
+  - name: GrLivArea
+    type: numerical
+  - name: BsmtFullBath
+    type: numerical
+  - name: BsmtHalfBath
+    type: numerical
+  - name: FullBath
+    type: numerical
+  - name: HalfBath
+    type: numerical
+  - name: BedroomAbvGr
+    type: numerical
+  - name: KitchenAbvGr
+    type: numerical
+  - name: KitchenQual
+    type: ordinal
+    categories:
+      - Po
+      - Fa
+      - TA
+      - Gd
+      - Ex
+  - name: TotRmsAbvGrd
+    type: numerical
+  - name: Functional
+    type: ordinal
+    categories:
+      - Sal
+      - Sev
+      - Maj2
+      - Maj1
+      - Mod
+      - Min2
+      - Min1
+      - Typ
+  - name: Fireplaces
+    type: numerical
+  - name: FireplaceQu
+    type: ordinal
+    categories:
+      - NA
+      - Po
+      - Fa
+      - TA
+      - Gd
+      - Ex
+  - name: GarageType
+    type: categorical
+    categories:
+      - 2Types
+      - Attchd
+      - Basment
+      - BuiltIn
+      - CarPort
+      - Detchd
+      - NA
+  - name: GarageYrBlt
+    type: numerical
+  - name: GarageFinish
+    type: ordinal
+    categories:
+      - NA
+      - Unf
+      - RFn
+      - Fin
+  - name: GarageCars
+    type: numerical
+  - name: GarageArea
+    type: numerical
+  - name: GarageQual
+    type: ordinal
+    categories:
+      - NA
+      - Po
+      - Fa
+      - TA
+      - Gd
+      - Ex
+  - name: GarageCond
+    type: ordinal
+    categories:
+      - NA
+      - Po
+      - Fa
+      - TA
+      - Gd
+      - Ex
+  - name: PavedDrive
+    type: ordinal
+    categories:
+      - N
+      - P
+      - Y
+  - name: WoodDeckSF
+    type: numerical
+  - name: OpenPorchSF
+    type: numerical
+  - name: EnclosedPorch
+    type: numerical
+  - name: 3SsnPorch
+    type: numerical
+  - name: ScreenPorch
+    type: numerical
+  - name: PoolArea
+    type: numerical
+  - name: PoolQC
+    type: ordinal
+    categories:
+      - NA
+      - Fa
+      - TA
+      - Gd
+      - Ex
+  - name: Fence
+    type: ordinal
+    categories:
+      - NA
+      - MnWw
+      - GdWo
+      - MnPrv
+      - GdPrv
+  - name: MiscFeature
+    type: categorical
+    categories:
+      - NA
+      - Elev
+      - Gar2
+      - Othr
+      - Shed
+      - TenC
+  - name: MiscVal
+    type: numerical
+  - name: MoSold
+    type: numerical
+  - name: YrSold
+    type: numerical
+  - name: SaleType
+    type: categorical
+    categories:
+      - WD
+      - CWD
+      - VWD
+      - New
+      - COD
+      - Con
+      - ConLw
+      - ConLI
+      - ConLD
+      - Oth
+  - name: SaleCondition
+    type: categorical
+    categories:
+      - Normal
+      - Abnorml
+      - AdjLand
+      - Alloca
+      - Family
+      - Partial
