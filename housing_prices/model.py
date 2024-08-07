@@ -1,14 +1,17 @@
 from functools import cache, cached_property
-
 import pandas as pd
-import yaml
 from numpy import nan
-from sklearn.compose import ColumnTransformer
+import yaml
 from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.impute import KNNImputer
-from sklearn.pipeline import make_pipeline
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder, FunctionTransformer
+from sklearn.compose import ColumnTransformer
+from sklearn.experimental import enable_iterative_imputer
+from sklearn.impute import KNNImputer, IterativeImputer, MissingIndicator
+from sklearn.pipeline import Pipeline, make_pipeline
 
+
+RANDOM_STATE = 0
 
 @cache
 def load_feature_config():
@@ -35,8 +38,8 @@ class HousingPricesModel:
         return make_pipeline(
             self.create_column_transformer(self.feature_configs),
             KNNImputer(n_neighbors=2, weights="uniform"),
-            # IterativeImputer(max_iter=10, random_state=0),
-            GradientBoostingRegressor(random_state=0)
+            # IterativeImputer(max_iter=10, random_state=RANDOM_STATE),
+            GradientBoostingRegressor(random_state=RANDOM_STATE)
         )
 
     def create_column_transformer(self, feature_configs):
