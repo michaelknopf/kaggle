@@ -40,6 +40,7 @@ features:
       - Pave
   - name: Alley
     type: categorical
+    null_rep: NA
     categories:
       - NA
       - Grvl
@@ -94,6 +95,7 @@ features:
       - IDOTRR
       - MeadowV
       - Mitchel
+      # misspelling found in data: 'NAmes'
       - Names
       - NoRidge
       - NPkVill
@@ -135,10 +137,15 @@ features:
     type: categorical
     categories:
       - 1Fam
+      # misspelling found in data: '2fmCon'
+      # fixed by lowercasing
       - 2FmCon
+      # misspelling found in data: 'Duplex'
       - Duplx
       - TwnhsE
       - TwnhsI
+      # also found in data: 'Twnhs'
+      # let's map this to TwnhsE for now
   - name: HouseStyle
     type: categorical
     categories:
@@ -202,12 +209,15 @@ features:
       - WdShngl
   - name: Exterior1st
     type: categorical
+    null_rep: Other
     categories:
       - AsbShng
       - AsphShn
+      # misspelling found in data: 'Brk Cmn'
       - BrkComm
       - BrkFace
       - CBlock
+      # misspelling found in data: 'CmentBd'
       - CemntBd
       - HdBoard
       - ImStucc
@@ -219,15 +229,19 @@ features:
       - Stucco
       - VinylSd
       - Wd Sdng
+      # misspelling found in data: 'Wd Shng'
       - WdShing
   - name: Exterior2nd
     type: categorical
+    null_rep: Other
     categories:
       - AsbShng
       - AsphShn
+      # misspelling found in data: 'Brk Cmn'
       - BrkComm
       - BrkFace
       - CBlock
+      # misspelling found in data: 'CmentBd'
       - CemntBd
       - HdBoard
       - ImStucc
@@ -239,9 +253,11 @@ features:
       - Stucco
       - VinylSd
       - Wd Sdng
+      # misspelling found in data: 'Wd Shng'
       - WdShing
   - name: MasVnrType
     type: categorical
+    null_rep: None
     categories:
       - BrkCmn
       - BrkFace
@@ -277,6 +293,7 @@ features:
       - Wood
   - name: BsmtQual
     type: ordinal
+    null_rep: NA
     categories:
       - NA
       - Po
@@ -286,6 +303,7 @@ features:
       - Ex
   - name: BsmtCond
     type: ordinal
+    null_rep: NA
     categories:
       - NA
       - Po
@@ -295,6 +313,7 @@ features:
       - Ex
   - name: BsmtExposure
     type: ordinal
+    null_rep: NA
     categories:
       - NA
       - 'No'
@@ -303,6 +322,7 @@ features:
       - Gd
   - name: BsmtFinType1
     type: ordinal
+    null_rep: NA
     categories:
       - NA
       - Unf
@@ -315,6 +335,7 @@ features:
     type: numerical
   - name: BsmtFinType2
     type: ordinal
+    null_rep: NA
     categories:
       - NA
       - Unf
@@ -404,6 +425,7 @@ features:
     type: numerical
   - name: FireplaceQu
     type: ordinal
+    null_rep: NA
     categories:
       - NA
       - Po
@@ -413,6 +435,7 @@ features:
       - Ex
   - name: GarageType
     type: categorical
+    null_rep: NA
     categories:
       - 2Types
       - Attchd
@@ -425,6 +448,7 @@ features:
     type: numerical
   - name: GarageFinish
     type: ordinal
+    null_rep: NA
     categories:
       - NA
       - Unf
@@ -436,6 +460,7 @@ features:
     type: numerical
   - name: GarageQual
     type: ordinal
+    null_rep: NA
     categories:
       - NA
       - Po
@@ -445,6 +470,7 @@ features:
       - Ex
   - name: GarageCond
     type: ordinal
+    null_rep: NA
     categories:
       - NA
       - Po
@@ -472,6 +498,7 @@ features:
     type: numerical
   - name: PoolQC
     type: ordinal
+    null_rep: NA
     categories:
       - NA
       - Fa
@@ -480,6 +507,7 @@ features:
       - Ex
   - name: Fence
     type: ordinal
+    null_rep: NA
     categories:
       - NA
       - MnWw
@@ -488,6 +516,7 @@ features:
       - GdPrv
   - name: MiscFeature
     type: categorical
+    null_rep: NA
     categories:
       - NA
       - Elev

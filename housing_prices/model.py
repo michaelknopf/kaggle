@@ -8,21 +8,15 @@ from sklearn.experimental import enable_iterative_imputer
 from sklearn.impute import KNNImputer, IterativeImputer, MissingIndicator
 from sklearn.pipeline import make_pipeline
 
-from housing_prices.config import load_config, ModelConfig, FeatureConfig
-from housing_prices.path_anchor import DATA_DIR
+from housing_prices.config import load_config, ModelConfig
+from housing_prices.prepare_data import load_train_data, load_test_data
+
+import warnings
+
+
+warnings.filterwarnings("ignore", category=UserWarning, message=".*Found unknown categories in columns.*")
 
 RANDOM_STATE = 0
-
-
-@cache
-def load_data():
-    df = pd.read_csv(DATA_DIR / 'kaggle_dataset/train.csv')
-
-    # drop the target variable and move it to a separate vector
-    features = df.drop('SalePrice', axis='columns')
-    target = df['SalePrice']
-
-    return features, target
 
 class HousingPricesModel:
 
@@ -47,56 +41,37 @@ class HousingPricesModel:
 
     def create_categorical_transformer(self):
         feature_configs = list(self.model_config.categorical_features())
-        categories = [self.get_categories(f) for f in feature_configs]
+        categories = [f.categories for f in feature_configs]
         feature_names = [f.name for f in feature_configs]
         one_hot_encoder = OneHotEncoder(dtype='int',
                                         drop='if_binary',
                                         categories=categories,
                                         handle_unknown='infrequent_if_exist')
-        encoder = make_pipeline(
-            self.create_replace_c_all_transformer(),
-            one_hot_encoder
-        )
-        return 'Categorical Preprocessor', encoder, feature_names
+        return 'Categorical Preprocessor', one_hot_encoder, feature_names
 
     def create_ordinal_transformer(self):
         feature_configs = list(self.model_config.ordinal_features())
-        categories = [self.get_categories(f) for f in feature_configs]
+        categories = [f.categories for f in feature_configs]
         feature_names = [f.name for f in feature_configs]
         encoder = OrdinalEncoder(categories=categories,
                                  handle_unknown='use_encoded_value',
                                  unknown_value=-1)
         return 'Ordinal Preprocessor', encoder, feature_names
 
-    @classmethod
-    def create_replace_c_all_transformer(cls):
-        def replace_c_all(df: pd.DataFrame):
-            if 'MSZoning' in df.columns:
-                df['MSZoning'] = df['MSZoning'].replace('C (all)', 'C')
-            return df
-        return FunctionTransformer(replace_c_all)
-
-    @classmethod
-    def get_categories(cls, feature_config):
-        categories = feature_config.categories
-        if 'NA' in categories:
-            categories = reversed(categories)
-            categories = [x for x in categories if x != 'NA'] + [np.nan]
-        return categories
 
 def test(pipeline) -> np.ndarray:
-    X_test = pd.read_csv(DATA_DIR / 'kaggle_dataset/test.csv')
+    X_test = load_test_data()
     return pipeline.predict(X_test)
 
-def main():
-    feature_config = load_config()
-    model = HousingPricesModel(feature_config)
+def train_and_test():
+    model_config = load_config()
+    model = HousingPricesModel(model_config)
 
-    features, target = load_data()
+    features, target = load_train_data()
     model.pipeline.fit(features, target)
 
     predictions = test(model.pipeline)
     print(predictions)
 
 if __name__ == '__main__':
-    main()
+    train_and_test()

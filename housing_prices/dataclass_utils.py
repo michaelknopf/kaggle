@@ -1,6 +1,21 @@
-from dataclasses import fields, is_dataclass
+from dataclasses import fields, is_dataclass, asdict
 from typing import get_args, get_origin, Type, ForwardRef
 import inspect
+
+class DictClassMixin:
+
+    def to_dict(self):
+        return to_dict(self)
+
+    @classmethod
+    def from_dict(cls, d):
+        return from_dict(d, cls)
+
+def to_dict(data):
+    if isinstance(data, list):
+        return [to_dict(x) for x in data]
+    else:
+        return asdict(data)
 
 def from_dict(data, data_class: Type):
     if not is_dataclass(data_class):
