@@ -1,12 +1,14 @@
+import time
 from functools import cached_property
-import pandas as pd
 import numpy as np
+
 from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder, FunctionTransformer
+from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder
 from sklearn.compose import ColumnTransformer
-from sklearn.experimental import enable_iterative_imputer
-from sklearn.impute import KNNImputer, IterativeImputer, MissingIndicator
+from sklearn.impute import KNNImputer
 from sklearn.pipeline import make_pipeline
+from sklearn.model_selection import cross_val_score
+from sklearn.metrics import make_scorer, root_mean_squared_log_error
 
 from housing_prices.config import load_config, ModelConfig
 from housing_prices.prepare_data import load_train_data, load_test_data
@@ -25,7 +27,6 @@ class HousingPricesModel:
         return make_pipeline(
             self.create_column_transformer(),
             KNNImputer(n_neighbors=2, weights="uniform"),
-            # IterativeImputer(max_iter=10, random_state=RANDOM_STATE),
             GradientBoostingRegressor(random_state=RANDOM_STATE)
         )
 
@@ -67,11 +68,29 @@ def train_and_test():
     model_config = load_config()
     model = HousingPricesModel(model_config)
 
-    features, target = load_train_data()
-    model.pipeline.fit(features, target)
+    X, y = load_train_data()
+    model.pipeline.fit(X, y)
 
     predictions = test(model.pipeline)
     print(predictions)
 
+def train_and_cross_validate():
+    model_config = load_config()
+    model = HousingPricesModel(model_config)
+
+    X, y = load_train_data()
+
+    start_time = time.time()
+    scores = cross_val_score(model.pipeline, X, y, cv=5, scoring=make_scorer(root_mean_squared_log_error))
+    elapsed_time = time.time() - start_time
+
+    for i, score in enumerate(scores):
+        print(f'Split {i} score: {score:.2f}')
+
+    print('')
+    print(f'Mean: {scores.mean():.2f}')
+    print(f'Standard deviation: {scores.std():.2f}')
+    print(f'Training time: {elapsed_time:.2f}')
+
 if __name__ == '__main__':
-    train_and_test()
+    train_and_cross_validate()
