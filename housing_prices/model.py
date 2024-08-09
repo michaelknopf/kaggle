@@ -1,4 +1,4 @@
-from functools import cache, cached_property
+from functools import cached_property
 import pandas as pd
 import numpy as np
 from sklearn.ensemble import GradientBoostingRegressor
@@ -10,11 +10,8 @@ from sklearn.pipeline import make_pipeline
 
 from housing_prices.config import load_config, ModelConfig
 from housing_prices.prepare_data import load_train_data, load_test_data
+from housing_prices.model_persistence import persist_model
 
-import warnings
-
-
-warnings.filterwarnings("ignore", category=UserWarning, message=".*Found unknown categories in columns.*")
 
 RANDOM_STATE = 0
 
@@ -57,6 +54,9 @@ class HousingPricesModel:
                                  handle_unknown='use_encoded_value',
                                  unknown_value=-1)
         return 'Ordinal Preprocessor', encoder, feature_names
+
+    def persist(self, note=''):
+        persist_model(self.pipeline, note=note)
 
 
 def test(pipeline) -> np.ndarray:

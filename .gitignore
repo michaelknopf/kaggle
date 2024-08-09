@@ -3,4 +3,5 @@
 /.venv/
 
 /housing_prices/data/
+/housing_prices/saved_models/
 __pycache__/
