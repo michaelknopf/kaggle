@@ -1,17 +1,14 @@
-import time
 from functools import cached_property
-import numpy as np
 
-from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder
+import numpy as np
 from sklearn.compose import ColumnTransformer, TransformedTargetRegressor
+from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.impute import KNNImputer
 from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder
 
-from housing_prices.config import load_config, ModelConfig
-from housing_prices.prepare_data import load_train_data, load_test_data
+from housing_prices.config import ModelConfig
 from housing_prices.model_persistence import persist_model
-
 
 RANDOM_STATE = 0
 SCORE_FUNCTION = 'neg_root_mean_squared_log_error'
@@ -67,21 +64,3 @@ class HousingPricesModel:
 
     def persist(self, note=''):
         persist_model(self.pipeline, note=note)
-
-
-def test(pipeline) -> np.ndarray:
-    X_test = load_test_data()
-    return pipeline.predict(X_test)
-
-def train_and_test():
-    model_config = load_config()
-    model = HousingPricesModel(model_config)
-
-    X, y = load_train_data()
-    model.pipeline.fit(X, y)
-
-    predictions = test(model.pipeline)
-    print(predictions)
-
-if __name__ == '__main__':
-    train_and_test()
