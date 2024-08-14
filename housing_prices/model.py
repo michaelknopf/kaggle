@@ -6,8 +6,7 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder
 from sklearn.compose import ColumnTransformer, TransformedTargetRegressor
 from sklearn.impute import KNNImputer
-from sklearn.pipeline import make_pipeline
-from sklearn.model_selection import cross_val_score
+from sklearn.pipeline import Pipeline
 
 from housing_prices.config import load_config, ModelConfig
 from housing_prices.prepare_data import load_train_data, load_test_data
@@ -15,6 +14,7 @@ from housing_prices.model_persistence import persist_model
 
 
 RANDOM_STATE = 0
+SCORE_FUNCTION = 'neg_root_mean_squared_log_error'
 
 class HousingPricesModel:
 
@@ -23,15 +23,18 @@ class HousingPricesModel:
 
     @cached_property
     def pipeline(self):
-        return make_pipeline(
-            self.create_column_transformer(),
-            KNNImputer(n_neighbors=2, weights="uniform"),
-            self.create_regressor()
-        )
+        return Pipeline([
+            ('preprocess', self.create_column_transformer()),
+            ('impute', KNNImputer(n_neighbors=2, weights="uniform")),
+            ('regress', self.create_regressor()),
+        ])
 
     def create_regressor(self):
+        gradient_boosted_regressor = GradientBoostingRegressor(
+            random_state=RANDOM_STATE
+        )
         return TransformedTargetRegressor(
-            regressor=GradientBoostingRegressor(random_state=RANDOM_STATE),
+            regressor=gradient_boosted_regressor,
             func=np.log1p,              # log(y + 1)
             inverse_func=np.expm1       # exp(y) - 1
         )
@@ -80,23 +83,5 @@ def train_and_test():
     predictions = test(model.pipeline)
     print(predictions)
 
-def train_and_cross_validate():
-    model_config = load_config()
-    model = HousingPricesModel(model_config)
-
-    X, y = load_train_data()
-
-    start_time = time.time()
-    scores = cross_val_score(model.pipeline, X, y, cv=5, scoring='neg_root_mean_squared_log_error')
-    elapsed_time = time.time() - start_time
-
-    for i, score in enumerate(scores):
-        print(f'Split {i} score: {score:.2f}')
-
-    print('')
-    print(f'Mean: {scores.mean():.2f}')
-    print(f'Standard deviation: {scores.std():.2f}')
-    print(f'Training time: {elapsed_time:.2f}')
-
 if __name__ == '__main__':
-    train_and_cross_validate()
+    train_and_test()

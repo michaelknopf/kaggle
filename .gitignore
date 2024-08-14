@@ -4,4 +4,5 @@
 
 /housing_prices/data/
 /housing_prices/saved_models/
+/housing_prices/model_selection/
 __pycache__/
