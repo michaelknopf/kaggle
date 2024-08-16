@@ -27,13 +27,20 @@ class HousingPricesModel:
         ])
 
     def create_regressor(self):
+        best_params = {
+            'learning_rate': 0.1,
+            'n_estimators': 1000,
+            'min_samples_leaf': 3,
+            'max_depth': 7,
+        }
         gradient_boosted_regressor = GradientBoostingRegressor(
-            random_state=RANDOM_STATE
+            random_state=RANDOM_STATE,
+            **best_params
         )
         return TransformedTargetRegressor(
             regressor=gradient_boosted_regressor,
             func=np.log1p,              # log(y + 1)
-            inverse_func=np.expm1       # exp(y) - 1
+            inverse_func=np.expm1,      # exp(y) - 1
         )
 
     def create_column_transformer(self):

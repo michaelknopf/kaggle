@@ -1,7 +1,7 @@
 import time
-import json
 from datetime import datetime
 
+import pandas as pd
 from sklearn.model_selection import cross_val_score, GridSearchCV
 
 from housing_prices.model import HousingPricesModel, SCORE_FUNCTION
@@ -10,7 +10,7 @@ from housing_prices.prepare_data import load_train_data
 from housing_prices.path_anchor import MODEL_SELECTION_DIR
 
 
-def grid_search(param_grid):
+def grid_search(param_grid, cv_splits=5):
     model_config = load_config()
     model = HousingPricesModel(model_config)
 
@@ -19,6 +19,7 @@ def grid_search(param_grid):
     cv = GridSearchCV(estimator=model.pipeline,
                       param_grid=param_grid,
                       scoring=SCORE_FUNCTION,
+                      cv=cv_splits,
                       verbose=3)
     cv.fit(X, y)
 
@@ -27,26 +28,26 @@ def grid_search(param_grid):
     print(f'Best score: {cv.best_score_}')
 
 
-def save_cv_results(cv: GridSearchCV):
+def save_cv_results(search_cv: GridSearchCV):
+    df = pd.DataFrame(search_cv.cv_results_)
+
     timestamp = datetime.now().replace(microsecond=0).isoformat()
     MODEL_SELECTION_DIR.mkdir(exist_ok=True)
-
-    # convert np arrays to python lists
-    results = {k: v if isinstance(v, list) else v.tolist()
-               for k, v in cv.cv_results_.items()}
-
     with open(MODEL_SELECTION_DIR / f'{timestamp}.json', 'w') as f:
-        json.dump(results, f, indent=2)
+        df.to_json(f, indent=2, orient='records')
+
+    with open(MODEL_SELECTION_DIR / f'{timestamp}.csv', 'w') as f:
+        df.to_csv(f, index=False)
 
 
-def train_and_cross_validate():
+def train_and_cross_validate(cv_splits=5):
     model_config = load_config()
     model = HousingPricesModel(model_config)
 
     X, y = load_train_data()
 
     start_time = time.time()
-    scores = cross_val_score(model.pipeline, X, y, cv=5, scoring=SCORE_FUNCTION)
+    scores = cross_val_score(model.pipeline, X, y, cv=cv_splits, scoring=SCORE_FUNCTION)
     elapsed_time = time.time() - start_time
 
     for i, score in enumerate(scores):
@@ -66,4 +67,4 @@ if __name__ == '__main__':
         'max_depth': [7],
     }
     grid = {'regress__regressor__' + k: v for k, v in grid.items()}
-    grid_search(grid)
+    grid_search(grid, cv_splits=2)
