@@ -1,7 +1,5 @@
 from datetime import datetime
 
-import numpy as np
-
 from housing_prices.config import load_config
 from housing_prices.model import HousingPricesModel
 from housing_prices.path_anchor import SUBMISSIONS_DIR

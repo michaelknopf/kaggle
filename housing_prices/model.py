@@ -28,10 +28,10 @@ class HousingPricesModel:
 
     def create_regressor(self):
         best_params = {
-            'learning_rate': 0.1,
-            'n_estimators': 1000,
-            'min_samples_leaf': 3,
-            'max_depth': 7,
+            'learning_rate': 10**-4,
+            'n_estimators': 10**5,
+            'max_leaf_nodes': 8,
+            'max_features': 'sqrt',
         }
         gradient_boosted_regressor = GradientBoostingRegressor(
             random_state=RANDOM_STATE,
