@@ -2,7 +2,11 @@ import time
 from datetime import datetime
 
 import pandas as pd
-from sklearn.model_selection import cross_val_score, GridSearchCV
+
+# noinspection PyUnresolvedReferences
+from sklearn.experimental import enable_halving_search_cv
+from sklearn.model_selection import cross_val_score, GridSearchCV, HalvingGridSearchCV
+from sklearn.model_selection._search import BaseSearchCV
 
 from housing_prices.model import HousingPricesModel, SCORE_FUNCTION
 from housing_prices.config import load_config
@@ -10,17 +14,22 @@ from housing_prices.prepare_data import load_train_data
 from housing_prices.path_anchor import MODEL_SELECTION_DIR
 
 
-def grid_search(param_grid, cv_splits=5):
+def grid_search(param_grid, cv_splits=5, use_halving=False):
     model_config = load_config()
     model = HousingPricesModel(model_config)
 
     X, y = load_train_data()
 
-    cv = GridSearchCV(estimator=model.pipeline,
-                      param_grid=param_grid,
-                      scoring=SCORE_FUNCTION,
-                      cv=cv_splits,
-                      verbose=3)
+    if use_halving:
+        grid_search_cls = HalvingGridSearchCV
+    else:
+        grid_search_cls = GridSearchCV
+
+    cv = grid_search_cls(estimator=model.pipeline,
+                         param_grid=param_grid,
+                         scoring=SCORE_FUNCTION,
+                         cv=cv_splits,
+                         verbose=3)
     cv.fit(X, y)
 
     save_cv_results(cv)
@@ -28,7 +37,18 @@ def grid_search(param_grid, cv_splits=5):
     print(f'Best score: {cv.best_score_}')
 
 
-def save_cv_results(search_cv: GridSearchCV):
+def pre_process_grid(grid, prefix=None):
+    if isinstance(grid, list):
+        grids = grid
+    else:
+        grids = [grid]
+    return [
+        {prefix + k: v for k, v in g.items()}
+        for g in grids
+    ]
+
+
+def save_cv_results(search_cv: BaseSearchCV):
     df = pd.DataFrame(search_cv.cv_results_)
 
     timestamp = datetime.now().replace(microsecond=0).isoformat()
@@ -60,11 +80,22 @@ def train_and_cross_validate(cv_splits=5):
 
 
 if __name__ == '__main__':
-    grid = {
-        'learning_rate': [0.1],
-        'n_estimators': [1000],
-        'min_samples_leaf': [3, 5],
-        'max_depth': [7],
-    }
-    grid = {'regress__regressor__' + k: v for k, v in grid.items()}
-    grid_search(grid, cv_splits=2)
+    # grid = {
+    #     'learning_rate': [10**-1, 10**-2],
+    #     'n_estimators': [10**3, 10**4],
+    #     'min_samples_leaf': [1, 3, 5, 9],
+    #     'max_leaf_nodes': [4, 8, 13],
+    #     'max_features': [None, 'sqrt', 0.8],
+    # }
+    # grid = pre_process_grid(grid, prefix='regress__regressor__')
+    # grid_search(grid, cv_splits=5, use_halving=True)
+
+    grid = [{
+        'learning_rate': [10 ** -i],
+        'n_estimators': [10 ** (i + 1)],
+        'max_leaf_nodes': [8],
+        'max_features': ['sqrt'],
+    } for i in range(1, 5)]
+
+    grid = pre_process_grid(grid, prefix='regress__regressor__')
+    grid_search(grid, cv_splits=5, use_halving=False)
