@@ -1,104 +1,74 @@
-from functools import cache, cached_property
+from functools import cached_property
 
-import pandas as pd
-import yaml
-from numpy import nan
-from sklearn.compose import ColumnTransformer
+import numpy as np
+from sklearn.compose import ColumnTransformer, TransformedTargetRegressor
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.impute import KNNImputer
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder, FunctionTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder
 
+from housing_prices.config import ModelConfig
+from housing_prices.model_persistence import persist_model
 
-@cache
-def load_feature_config():
-    with open('/Users/mknopf/projects/personal/housing-prices/housing_prices/feature_config.yml') as f:
-        return yaml.safe_load(f)
-
-@cache
-def load_data():
-    df = pd.read_csv('/Users/mknopf/projects/personal/housing-prices/data/kaggle_dataset/train.csv')
-
-    # drop the target variable and move it to a separate vector
-    features = df.drop('SalePrice', axis='columns')
-    target = df['SalePrice']
-
-    return features, target
+RANDOM_STATE = 0
+SCORE_FUNCTION = 'neg_root_mean_squared_log_error'
 
 class HousingPricesModel:
 
-    def __init__(self, feature_configs):
-        self.feature_configs = feature_configs
+    def __init__(self, model_config: ModelConfig):
+        self.model_config = model_config
 
     @cached_property
     def pipeline(self):
-        return make_pipeline(
-            self.create_column_transformer(self.feature_configs),
-            KNNImputer(n_neighbors=2, weights="uniform"),
-            # IterativeImputer(max_iter=10, random_state=0),
-            GradientBoostingRegressor(random_state=0)
+        return Pipeline([
+            ('preprocess', self.create_column_transformer()),
+            ('impute', KNNImputer(n_neighbors=2, weights="uniform")),
+            ('regress', self.create_regressor()),
+        ])
+
+    @staticmethod
+    def create_regressor():
+        best_params = {
+            'learning_rate': 10**-4,
+            'n_estimators': 10**5,
+            'max_leaf_nodes': 8,
+            'max_features': 'sqrt',
+        }
+        gradient_boosted_regressor = GradientBoostingRegressor(
+            random_state=RANDOM_STATE,
+            **best_params
+        )
+        return TransformedTargetRegressor(
+            regressor=gradient_boosted_regressor,
+            func=np.log1p,              # log(y + 1)
+            inverse_func=np.expm1,      # exp(y) - 1
         )
 
-    def create_column_transformer(self, feature_configs):
-        categorical = list(filter(lambda c: c['type'] == 'categorical', feature_configs))
-        ordinal = list(filter(lambda c: c['type'] == 'ordinal', feature_configs))
-
+    def create_column_transformer(self):
         transformers = [
-            self.create_categorical_transformer(categorical),
-            self.create_ordinal_transformer(ordinal)
+            self.create_categorical_transformer(),
+            self.create_ordinal_transformer()
         ]
-
         return ColumnTransformer(transformers, remainder='passthrough', force_int_remainder_cols=False)
 
-    def create_categorical_transformer(self, feature_configs):
-        categories = [self.get_categories(f) for f in feature_configs]
-        feature_names = [f['name'] for f in feature_configs]
+    def create_categorical_transformer(self):
+        feature_configs = list(self.model_config.categorical_features())
+        categories = [f.categories for f in feature_configs]
+        feature_names = [f.name for f in feature_configs]
         one_hot_encoder = OneHotEncoder(dtype='int',
                                         drop='if_binary',
                                         categories=categories,
                                         handle_unknown='infrequent_if_exist')
-        encoder = make_pipeline(
-            self.create_replace_c_all_transformer(),
-            one_hot_encoder
-        )
-        return 'Categorical Preprocessor', encoder, feature_names
+        return 'Categorical Preprocessor', one_hot_encoder, feature_names
 
-    def create_ordinal_transformer(self, feature_configs):
-        categories = [self.get_categories(f) for f in feature_configs]
-        feature_names = [f['name'] for f in feature_configs]
+    def create_ordinal_transformer(self):
+        feature_configs = list(self.model_config.ordinal_features())
+        categories = [f.categories for f in feature_configs]
+        feature_names = [f.name for f in feature_configs]
         encoder = OrdinalEncoder(categories=categories,
                                  handle_unknown='use_encoded_value',
                                  unknown_value=-1)
         return 'Ordinal Preprocessor', encoder, feature_names
 
-    @classmethod
-    def create_replace_c_all_transformer(cls):
-        def replace_c_all(df: pd.DataFrame):
-            if 'MSZoning' in df.columns:
-                df['MSZoning'] = df['MSZoning'].replace('C (all)', 'C')
-            return df
-        return FunctionTransformer(replace_c_all)
-
-    @classmethod
-    def get_categories(cls, feature_config):
-        categories = feature_config['categories']
-        if 'NA' in categories:
-            categories = reversed(categories)
-            categories = [x for x in categories if x != 'NA'] + [nan]
-        return categories
-
-def test(pipeline):
-    X_test = pd.read_csv('/Users/mknopf/projects/personal/housing-prices/data/kaggle_dataset/test.csv')
-    pipeline.predict(X_test)
-
-def main():
-    feature_config = load_feature_config()
-    model = HousingPricesModel(feature_config)
-
-    features, target = load_data()
-    model.pipeline.fit(features, target)
-
-    test(model.pipeline)
-
-if __name__ == '__main__':
-    main()
+    def persist(self, note=''):
+        persist_model(self.pipeline, note=note)
