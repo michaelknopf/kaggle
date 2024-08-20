@@ -5,8 +5,9 @@ import pandas as pd
 
 # noinspection PyUnresolvedReferences
 from sklearn.experimental import enable_halving_search_cv
-from sklearn.model_selection import cross_val_score, GridSearchCV, HalvingGridSearchCV
-from sklearn.model_selection._search import BaseSearchCV
+# noinspection PyProtectedMember
+from sklearn.model_selection import cross_val_score, GridSearchCV, HalvingGridSearchCV, BaseSearchCV
+
 
 from housing_prices.model import HousingPricesModel, SCORE_FUNCTION
 from housing_prices.config import load_config

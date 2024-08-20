@@ -26,7 +26,8 @@ class HousingPricesModel:
             ('regress', self.create_regressor()),
         ])
 
-    def create_regressor(self):
+    @staticmethod
+    def create_regressor():
         best_params = {
             'learning_rate': 10**-4,
             'n_estimators': 10**5,
