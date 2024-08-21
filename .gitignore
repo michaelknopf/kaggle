@@ -7,7 +7,7 @@ __pycache__/
 # Kaggle API creds
 kaggle.json
 
-/housing_prices/data/
-/housing_prices/saved_models/
-/housing_prices/model_selection/
-/housing_prices/submissions/
+/packages/*/data/
+/packages/*/saved_models/
+/packages/*/model_selection/
+/packages/*/submissions/
