@@ -1,3 +1,3 @@
-import warnings
+from common.silence_warnings import silence_warnings
 
-warnings.filterwarnings("ignore", category=UserWarning, message=".*Found unknown categories in columns.*")
+silence_warnings()

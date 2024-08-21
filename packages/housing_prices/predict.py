@@ -2,7 +2,7 @@ from datetime import datetime
 
 from housing_prices.config import load_config
 from housing_prices.model import HousingPricesModel
-from housing_prices.path_anchor import SUBMISSIONS_DIR
+from housing_prices.paths import paths
 from housing_prices.prepare_data import load_train_data, load_test_data
 
 
@@ -18,8 +18,8 @@ def train_and_test():
     X_test['SalePrice'] = predictions
 
     timestamp = datetime.now().replace(microsecond=0).isoformat()
-    SUBMISSIONS_DIR.mkdir(exist_ok=True)
-    submission_file = SUBMISSIONS_DIR / f'{timestamp}.csv'
+    paths.SUBMISSIONS_DIR.mkdir(exist_ok=True)
+    submission_file = paths.SUBMISSIONS_DIR / f'{timestamp}.csv'
     with open(submission_file, 'w') as f:
         X_test.to_csv(f, index=False, columns=['Id', 'SalePrice'])
 

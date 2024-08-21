@@ -4,8 +4,8 @@ from typing import List, Optional
 
 import yaml
 
-from housing_prices.path_anchor import HOUSING_PRICES_DIR
-from housing_prices.dataclass_utils import DictClassMixin
+from housing_prices.paths import HOUSING_PRICES_DIR
+from common.dataclass_utils import DictClassMixin
 
 
 @cache

@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 
 from housing_prices.config import load_config
-from housing_prices.path_anchor import DATA_DIR
+from housing_prices.paths import paths
 
 model_config = load_config()
 
@@ -22,7 +22,7 @@ def _load_train_data():
 
 
 def _load_raw_train_data():
-    df = pd.read_csv(DATA_DIR / 'kaggle_dataset/train.csv')
+    df = pd.read_csv(paths.DATA_DIR / 'kaggle_dataset/train.csv')
 
     # drop the target variable and move it to a separate vector
     X = df.drop('SalePrice', axis='columns')
@@ -43,7 +43,7 @@ def _load_test_data():
 
 
 def _load_raw_test_data():
-    return pd.read_csv(DATA_DIR / 'kaggle_dataset/test.csv')
+    return pd.read_csv(paths.DATA_DIR / 'kaggle_dataset/test.csv')
 
 
 def _pre_process(X: pd.DataFrame):

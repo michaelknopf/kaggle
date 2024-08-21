@@ -12,7 +12,7 @@ from sklearn.model_selection import cross_val_score, GridSearchCV, HalvingGridSe
 from housing_prices.model import HousingPricesModel, SCORE_FUNCTION
 from housing_prices.config import load_config
 from housing_prices.prepare_data import load_train_data
-from housing_prices.path_anchor import MODEL_SELECTION_DIR
+from housing_prices.paths import paths
 
 
 def grid_search(param_grid, cv_splits=5, use_halving=False):
@@ -53,11 +53,11 @@ def save_cv_results(search_cv: BaseSearchCV):
     df = pd.DataFrame(search_cv.cv_results_)
 
     timestamp = datetime.now().replace(microsecond=0).isoformat()
-    MODEL_SELECTION_DIR.mkdir(exist_ok=True)
-    with open(MODEL_SELECTION_DIR / f'{timestamp}.json', 'w') as f:
+    paths.MODEL_SELECTION_DIR.mkdir(exist_ok=True)
+    with open(paths.MODEL_SELECTION_DIR / f'{timestamp}.json', 'w') as f:
         df.to_json(f, indent=2, orient='records')
 
-    with open(MODEL_SELECTION_DIR / f'{timestamp}.csv', 'w') as f:
+    with open(paths.MODEL_SELECTION_DIR / f'{timestamp}.csv', 'w') as f:
         df.to_csv(f, index=False)
 
 
