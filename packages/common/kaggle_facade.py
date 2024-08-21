@@ -1,7 +1,7 @@
 import os
 from zipfile import ZipFile
 
-from housing_prices.path_anchor import ROOT_DIR, DATA_DIR
+from common.paths import ROOT_DIR, CompetitionPaths
 
 config_dir = os.environ.setdefault('KAGGLE_CONFIG_DIR', str(ROOT_DIR))
 from kaggle import api, KaggleApi
@@ -10,19 +10,23 @@ HOUSE_PRICES_COMPETITION_NAME = 'house-prices-advanced-regression-techniques'
 
 class KaggleFacade:
 
-    def __init__(self, competition: str, kaggle_api: KaggleApi = api):
+    def __init__(self,
+                 competition: str,
+                 paths: CompetitionPaths,
+                 kaggle_api: KaggleApi = api):
         self.competition = competition
+        self.paths = paths
         self.api = kaggle_api
         self.api.authenticate()
 
     def download_data(self):
-        temp_zip = DATA_DIR / f'{self.competition}.zip'
-        output_folder = DATA_DIR / 'kaggle_dataset'
+        temp_zip = self.paths.DATA_DIR / f'{self.competition}.zip'
+        output_folder = self.paths.DATA_DIR / 'kaggle_dataset'
 
         if output_folder.exists():
             return
 
-        self.api.competition_download_files(self.competition, path=DATA_DIR, quiet=False)
+        self.api.competition_download_files(self.competition, path=self.paths.DATA_DIR, quiet=False)
 
         with ZipFile(temp_zip) as f:
             f.extractall(output_folder)
