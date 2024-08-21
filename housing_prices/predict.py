@@ -19,8 +19,11 @@ def train_and_test():
 
     timestamp = datetime.now().replace(microsecond=0).isoformat()
     SUBMISSIONS_DIR.mkdir(exist_ok=True)
-    with open(SUBMISSIONS_DIR / f'{timestamp}.csv', 'w') as f:
+    submission_file = SUBMISSIONS_DIR / f'{timestamp}.csv'
+    with open(submission_file, 'w') as f:
         X_test.to_csv(f, index=False, columns=['Id', 'SalePrice'])
+
+    return submission_file
 
 
 if __name__ == '__main__':
