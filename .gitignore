@@ -1,10 +1,13 @@
 /.idea/
 /.git/
 /.venv/
+__pycache__/
 .DS_Store
+
+# Kaggle API creds
+kaggle.json
 
 /housing_prices/data/
 /housing_prices/saved_models/
 /housing_prices/model_selection/
 /housing_prices/submissions/
-__pycache__/
