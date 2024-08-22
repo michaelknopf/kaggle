@@ -8,7 +8,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder
 
 from housing_prices.config import ModelConfig
-from housing_prices.model_persistence import persist_model
+from common.model_persistence import persist_model
 
 RANDOM_STATE = 0
 SCORE_FUNCTION = 'neg_root_mean_squared_log_error'
