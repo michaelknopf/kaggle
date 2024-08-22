@@ -3,6 +3,7 @@ from zipfile import ZipFile
 
 from common.paths import ROOT_DIR, CompetitionPaths
 
+# this must run before importing the kaggle module
 config_dir = os.environ.setdefault('KAGGLE_CONFIG_DIR', str(ROOT_DIR))
 from kaggle import api, KaggleApi
 
