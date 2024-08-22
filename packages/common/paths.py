@@ -1,9 +1,9 @@
 from pathlib import Path
 
-__FILE_DIR = Path(__file__)
+__FILE_PATH = Path(__file__)
 
-ROOT_DIR = __FILE_DIR.parents[2]
-COMMON_DIR = __FILE_DIR.parents[0]
+ROOT_DIR = __FILE_PATH.parents[2]
+COMMON_DIR = __FILE_PATH.parent
 
 class CompetitionPaths:
 
