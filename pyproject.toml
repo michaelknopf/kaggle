@@ -4,8 +4,11 @@ version = "1.0.0"
 description = "Solutions to Kaggle competitions"
 authors = ["Michael Knopf"]
 packages = [
-  {include = "*", from="packages"},
+  {include = "**/*", from="packages"},
 ]
+
+[tool.poetry.scripts]
+kag = "common.kaggle_cli:main"
 
 [tool.poetry.dependencies]
 python = "^3.12"

@@ -8,7 +8,9 @@ from sklearn.base import BaseEstimator
 # noinspection PyUnresolvedReferences
 from sklearn.experimental import enable_halving_search_cv
 # noinspection PyProtectedMember
-from sklearn.model_selection import GridSearchCV, HalvingGridSearchCV, BaseSearchCV
+from sklearn.model_selection import GridSearchCV, HalvingGridSearchCV
+from sklearn.model_selection._search import BaseSearchCV
+
 
 def simple_grid_search_cv(estimator: BaseEstimator,
                           param_grid,
