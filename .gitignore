@@ -1,6 +1,7 @@
 /.idea/
 /.git/
 /.venv/
+/dist/
 __pycache__/
 .DS_Store
 
@@ -11,3 +12,5 @@ kaggle.json
 /packages/*/saved_models/
 /packages/*/model_selection/
 /packages/*/submissions/
+
+/scripts/private_rc.sh
