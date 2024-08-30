@@ -1,5 +1,8 @@
+from dataclasses import dataclass
 from functools import cache
 from pathlib import Path
+
+from common import sagemaker_utils
 
 __FILE_PATH = Path(__file__)
 
@@ -7,16 +10,42 @@ ROOT_DIR = __FILE_PATH.parents[2]
 PACKAGES_DIR = __FILE_PATH.parents[1]
 COMMON_DIR = __FILE_PATH.parent
 
+@dataclass
 class CompetitionPaths:
-
-    def __init__(self, package_dir: Path):
-        self.ROOT_DIR = ROOT_DIR
-        self.PACKAGE_DIR = package_dir
-        self.DATA_DIR = package_dir / 'data'
-        self.MODEL_REPO_DIR = package_dir / 'saved_models'
-        self.MODEL_SELECTION_DIR = package_dir / 'model_selection'
-        self.SUBMISSIONS_DIR = package_dir / 'submissions'
+    root_dir: Path
+    package_dir: Path
+    data_dir: Path
+    model_repo_dir: Path
+    model_selection_dir: Path
+    submissions_dir: Path
 
 @cache
 def competition_paths_for_package_name(package_name: str):
-    return CompetitionPaths(PACKAGES_DIR / package_name)
+    if sagemaker_utils.is_sagemaker():
+        return _sagemaker_paths(package_name)
+    else:
+        return _local_paths(package_name)
+
+def _local_paths(package_name: str):
+    package_dir = PACKAGES_DIR / package_name
+    return CompetitionPaths(
+        root_dir=ROOT_DIR,
+        package_dir=package_dir,
+        data_dir=package_dir / 'data',
+        model_repo_dir=package_dir / 'saved_models',
+        model_selection_dir=package_dir / 'model_selection',
+        submissions_dir=package_dir / 'submissions',
+    )
+
+def _sagemaker_paths(package_name: str):
+    package_dir = PACKAGES_DIR / package_name
+    env = sagemaker_utils.sagemaker_environment()
+    output_dir = Path(env.output_dir)
+    return CompetitionPaths(
+        root_dir=ROOT_DIR,
+        package_dir=package_dir,
+        data_dir=Path(env.channel_input_dirs['train']),
+        model_repo_dir=output_dir / 'saved_models',
+        model_selection_dir=output_dir / 'model_selection',
+        submissions_dir=output_dir / 'submissions',
+    )

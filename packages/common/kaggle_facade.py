@@ -21,13 +21,13 @@ class KaggleFacade:
         self.api.authenticate()
 
     def download_data(self):
-        temp_zip = self.paths.DATA_DIR / f'{self.competition.kaggle_name}.zip'
-        output_folder = self.paths.DATA_DIR / 'kaggle_dataset'
+        temp_zip = self.paths.data_dir / f'{self.competition.kaggle_name}.zip'
+        output_folder = self.paths.data_dir / 'kaggle_dataset'
 
         if output_folder.exists():
             return
 
-        self.api.competition_download_files(self.competition.kaggle_name, path=self.paths.DATA_DIR, quiet=False)
+        self.api.competition_download_files(self.competition.kaggle_name, path=self.paths.data_dir, quiet=False)
 
         with ZipFile(temp_zip) as f:
             f.extractall(output_folder)

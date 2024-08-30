@@ -10,7 +10,7 @@ from common.dataclass_utils import DictClassMixin
 
 @cache
 def load_config() -> 'ModelConfig':
-    with open(paths.PACKAGE_DIR / 'feature_config.yml') as f:
+    with open(paths.package_dir / 'feature_config.yml') as f:
         config_dict = yaml.safe_load(f)
     return ModelConfig.from_dict(config_dict)
 

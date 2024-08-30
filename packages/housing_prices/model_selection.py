@@ -26,7 +26,7 @@ def housing_grid_search_1():
                                cv_splits=5,
                                scoring=SCORE_FUNCTION,
                                use_halving=True)
-    grid_search(cv, X, y, model_selection_dir=paths.MODEL_SELECTION_DIR)
+    grid_search(cv, X, y, model_selection_dir=paths.model_selection_dir)
 
 def housing_grid_search_2():
     grid = [{
@@ -43,7 +43,7 @@ def housing_grid_search_2():
                                cv_splits=5,
                                scoring=SCORE_FUNCTION,
                                use_halving=False)
-    grid_search(cv, X, y, model_selection_dir=paths.MODEL_SELECTION_DIR)
+    grid_search(cv, X, y, model_selection_dir=paths.model_selection_dir)
 
 
 if __name__ == '__main__':

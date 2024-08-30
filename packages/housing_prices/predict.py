@@ -16,7 +16,7 @@ def train_and_test():
     predictions = model.pipeline.predict(X_test)
     X_test['SalePrice'] = predictions
 
-    return save_submission(X_test, paths.SUBMISSIONS_DIR)
+    return save_submission(X_test, paths.submissions_dir)
 
 
 if __name__ == '__main__':

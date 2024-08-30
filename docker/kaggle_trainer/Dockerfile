@@ -12,4 +12,6 @@ COPY --from=dist kaggle_solutions-1.0.0-py3-none-any.whl .
 
 RUN pip install kaggle_solutions-1.0.0-py3-none-any.whl
 
+COPY train.py /opt/ml/code/train.py
+
 ENV SAGEMAKER_PROGRAM train.py

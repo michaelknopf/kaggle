@@ -72,8 +72,8 @@ def train_and_cross_validate(estimator: BaseEstimator,
     cv_results = grid_search(search_cv, X, y, model_selection_dir)
 
     print('')
-    print(f'Score mean: {cv_results['mean_test_score']:.2f}')
-    print(f'Score standard deviation: {cv_results['std_test_score']:.2f}')
-    print(f'Total training time: {cv_results['mean_fit_time']*cv_splits:.2f}')
+    print(f'Score mean: {cv_results["mean_test_score"]:.2f}')
+    print(f'Score standard deviation: {cv_results["std_test_score"]:.2f}')
+    print(f'Total training time: {cv_results["mean_fit_time"]*cv_splits:.2f}')
 
     return cv_results
