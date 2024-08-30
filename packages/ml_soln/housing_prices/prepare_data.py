@@ -4,8 +4,8 @@ import itertools
 import pandas as pd
 import numpy as np
 
-from housing_prices.config import load_config
-from housing_prices.paths import paths
+from ml_soln.housing_prices.config import load_config
+from ml_soln.housing_prices.paths import paths
 
 model_config = load_config()
 

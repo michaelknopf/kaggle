@@ -8,7 +8,7 @@ import logging
 
 from sagemaker_training.logging_config import configure_logger
 
-from common.sagemaker_utils import sm_utils
+from ml_soln.common.sagemaker_utils import sm_utils
 
 configure_logger(logging.INFO)
 logger = logging.getLogger(__name__)
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 def main(model_name=sm_utils.model_name):
     logger.info(f'Training for model: {model_name}')
     if model_name == 'digit_recognizer':
-        from digit_recognizer import ctx
+        from ml_soln.digit_recognizer import ctx
         model = ctx().model.model
         history = ctx().trainer.train()
         ctx().model_persistence.save_model(model, history)

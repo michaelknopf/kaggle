@@ -4,7 +4,7 @@ import boto3
 import sagemaker
 from sagemaker.estimator import Estimator
 
-from common.paths import ROOT_DIR
+from ml_soln.common.paths import ROOT_DIR
 
 # https://github.com/aws/deep-learning-containers/blob/master/available_images.md
 # image = '763104351884.dkr.ecr.us-east-1.amazonaws.com/tensorflow-training:2.16.2-gpu-py310-cu123-ubuntu20.04-sagemaker'

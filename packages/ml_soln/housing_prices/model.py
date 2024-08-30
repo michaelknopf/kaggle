@@ -7,8 +7,9 @@ from sklearn.impute import KNNImputer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder
 
-from housing_prices.config import ModelConfig
-from common.model_persistence import save_model
+from ml_soln.housing_prices.config import ModelConfig
+from ml_soln.common.model_persistence import ModelPersistence
+from ml_soln.housing_prices.paths import paths
 
 RANDOM_STATE = 0
 SCORE_FUNCTION = 'neg_root_mean_squared_log_error'
@@ -17,6 +18,7 @@ class HousingPricesModel:
 
     def __init__(self, model_config: ModelConfig):
         self.model_config = model_config
+        self.model_persistence = ModelPersistence(paths)
 
     @cached_property
     def pipeline(self):

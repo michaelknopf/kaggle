@@ -4,15 +4,15 @@ from typing import List
 
 import yaml
 
-from common.dataclass_utils import DictClassMixin
+from ml_soln.common.dataclass_utils import DictClassMixin
 
 
 @cache
 def get_manifest() -> 'Manifest':
     # avoid circular import
-    from common.paths import PACKAGES_DIR
+    from ml_soln.common.paths import ML_SOLN_DIR
 
-    MANIFEST_PATH = PACKAGES_DIR / 'manifest.yml'
+    MANIFEST_PATH = ML_SOLN_DIR / 'manifest.yml'
     with open(MANIFEST_PATH) as f:
         config_dict = yaml.safe_load(f)
     return Manifest.from_dict(config_dict)

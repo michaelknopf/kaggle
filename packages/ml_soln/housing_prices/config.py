@@ -4,8 +4,8 @@ from typing import List, Optional
 
 import yaml
 
-from housing_prices.paths import paths
-from common.dataclass_utils import DictClassMixin
+from ml_soln.housing_prices.paths import paths
+from ml_soln.common.dataclass_utils import DictClassMixin
 
 
 @cache

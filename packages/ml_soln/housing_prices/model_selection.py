@@ -1,11 +1,11 @@
 # noinspection PyUnresolvedReferences
 from sklearn.experimental import enable_halving_search_cv
 
-from common.model_selection import grid_search, simple_grid_search_cv, pre_process_grid
-from housing_prices.config import load_config
-from housing_prices.model import HousingPricesModel, SCORE_FUNCTION
-from housing_prices.paths import paths
-from housing_prices.prepare_data import load_train_data
+from ml_soln.common.model_selection import grid_search, simple_grid_search_cv, pre_process_grid
+from ml_soln.housing_prices.config import load_config
+from ml_soln.housing_prices.model import HousingPricesModel, SCORE_FUNCTION
+from ml_soln.housing_prices.paths import paths
+from ml_soln.housing_prices.prepare_data import load_train_data
 
 
 model_config = load_config()

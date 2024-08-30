@@ -8,9 +8,9 @@ __pycache__/
 # Kaggle API creds
 kaggle.json
 
-/packages/*/data/
-/packages/*/saved_models/
-/packages/*/model_selection/
-/packages/*/submissions/
+/packages/ml_soln/*/data/
+/packages/ml_soln/*/saved_models/
+/packages/ml_soln/*/model_selection/
+/packages/ml_soln/*/predictions/
 
 /scripts/private_rc.sh

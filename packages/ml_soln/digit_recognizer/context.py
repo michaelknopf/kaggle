@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 
-from common.model_persistence import ModelPersistence
-from common.paths import CompetitionPaths, competition_paths_for_package_name
-from digit_recognizer.model import Model
-from digit_recognizer.prepare_data import DataPreparer
-from digit_recognizer.trainer import Trainer
+from ml_soln.common.model_persistence import ModelPersistence
+from ml_soln.common.paths import CompetitionPaths, competition_paths_for_package_name
+from ml_soln.digit_recognizer.model import Model
+from ml_soln.digit_recognizer.prepare_data import DataPreparer
+from ml_soln.digit_recognizer.trainer import Trainer
 
 
 @dataclass

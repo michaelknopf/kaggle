@@ -3,7 +3,7 @@ from functools import cache
 import pandas as pd
 from keras.api.utils import to_categorical
 
-from digit_recognizer import ctx
+from ml_soln.digit_recognizer import ctx
 
 
 class DataPreparer:

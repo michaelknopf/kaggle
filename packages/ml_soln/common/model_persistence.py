@@ -4,8 +4,8 @@ from datetime import datetime
 
 from keras.src.callbacks import History
 
-from common.paths import CompetitionPaths
-from common.sagemaker_utils import sm_utils
+from ml_soln.common.paths import CompetitionPaths
+from ml_soln.common.sagemaker_utils import sm_utils
 import pickle
 import json
 

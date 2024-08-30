@@ -1,9 +1,9 @@
 import argparse
 import os.path
 
-from common.kaggle_facade import KaggleFacade
-from common.paths import competition_paths_for_package_name
-from common.manifest import get_manifest
+from ml_soln.common.kaggle_facade import KaggleFacade
+from ml_soln.common.paths import competition_paths_for_package_name
+from ml_soln.common.manifest import get_manifest
 
 def main():
     parser = argparse.ArgumentParser(prog='kaggle_ops',
@@ -45,14 +45,14 @@ def submit(competition_name, filename, message):
     if not filename:
         file_path = find_latest_submission(paths)
     else:
-        file_path = paths.submissions_dir / filename
+        file_path = paths.predictions_dir / filename
 
     kaggle = KaggleFacade(competition=competition_name, paths=paths)
     kaggle.submit_predictions(file_path, message)
 
 def find_latest_submission(paths):
-    submission_files = list_file_names(paths.submissions_dir)
-    return max(submission_files, key=lambda filename: os.path.getmtime(paths.submissions_dir / filename))
+    submission_files = list_file_names(paths.predictions_dir)
+    return max(submission_files, key=lambda filename: os.path.getmtime(paths.predictions_dir / filename))
 
 def list_file_names(dir_path):
     for path, dirs, filenames in dir_path.walk():

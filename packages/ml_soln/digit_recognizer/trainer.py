@@ -2,7 +2,7 @@ from keras.src.callbacks import ReduceLROnPlateau, History
 from keras.src.legacy.preprocessing.image import ImageDataGenerator
 from sklearn.model_selection import train_test_split
 
-from digit_recognizer import ctx
+from ml_soln.digit_recognizer import ctx
 
 
 class Trainer:

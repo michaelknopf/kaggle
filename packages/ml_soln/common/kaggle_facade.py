@@ -1,8 +1,8 @@
 import os
 from zipfile import ZipFile
 
-from common.paths import ROOT_DIR, CompetitionPaths
-from common.manifest import get_manifest
+from ml_soln.common.paths import ROOT_DIR, CompetitionPaths
+from ml_soln.common.manifest import get_manifest
 
 # this must run before importing the kaggle module
 config_dir = os.environ.setdefault('KAGGLE_CONFIG_DIR', str(ROOT_DIR))
