@@ -5,19 +5,21 @@ See https://docs.aws.amazon.com/sagemaker/latest/dg/prebuilt-containers-extend.h
 """
 
 import logging
-import os
 
-from sagemaker_training.environment import Environment
+from sagemaker_training.logging_config import configure_logger
 
+from common.sagemaker_utils import sm_utils
+
+configure_logger(logging.INFO)
 logger = logging.getLogger(__name__)
 
-logger.info("Loaded training script")
-logger.info(f"Hyperparameters: {os.environ['SM_HPS']}")
-
-env = Environment()
-
-def main():
-    env.output_dir
+def main(model_name=sm_utils.model_name):
+    logger.info(f'Training for model: {model_name}')
+    if model_name == 'digit_recognizer':
+        from digit_recognizer import ctx
+        model = ctx().model.model
+        history = ctx().trainer.train()
+        ctx().model_persistence.save_model(model, history)
 
 if __name__ == '__main__':
-    main()
+    main('digit_recognizer')

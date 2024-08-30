@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from functools import cache
 from pathlib import Path
 
-from common import sagemaker_utils
+from common.sagemaker_utils import sm_utils
 
 __FILE_PATH = Path(__file__)
 
@@ -21,7 +21,7 @@ class CompetitionPaths:
 
 @cache
 def competition_paths_for_package_name(package_name: str):
-    if sagemaker_utils.is_sagemaker():
+    if sm_utils.is_sagemaker:
         return _sagemaker_paths(package_name)
     else:
         return _local_paths(package_name)
@@ -39,13 +39,13 @@ def _local_paths(package_name: str):
 
 def _sagemaker_paths(package_name: str):
     package_dir = PACKAGES_DIR / package_name
-    env = sagemaker_utils.sagemaker_environment()
+    env = sm_utils.sagemaker_environment
     output_dir = Path(env.output_dir)
     return CompetitionPaths(
         root_dir=ROOT_DIR,
         package_dir=package_dir,
         data_dir=Path(env.channel_input_dirs['train']),
-        model_repo_dir=output_dir / 'saved_models',
+        model_repo_dir=Path(env.model_dir),
         model_selection_dir=output_dir / 'model_selection',
         submissions_dir=output_dir / 'submissions',
     )

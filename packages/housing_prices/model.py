@@ -8,7 +8,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder
 
 from housing_prices.config import ModelConfig
-from common.model_persistence import persist_model
+from common.model_persistence import save_model
 
 RANDOM_STATE = 0
 SCORE_FUNCTION = 'neg_root_mean_squared_log_error'
@@ -71,4 +71,4 @@ class HousingPricesModel:
         return 'Ordinal Preprocessor', encoder, feature_names
 
     def persist(self, note=''):
-        persist_model(self.pipeline, note=note)
+        save_model(self.pipeline, note=note)

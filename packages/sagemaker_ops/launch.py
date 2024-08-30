@@ -42,7 +42,8 @@ sagemaker_session = sagemaker.local.LocalSession(boto_session=boto_session)
 IMAGE_URI = 'kaggle-trainer:latest'
 # role = get_execution_role(sagemaker_session=sagemaker_session)
 role = 'arn:aws:iam::394547497655:role/service-role/AmazonSageMaker-ExecutionRole-20240306T211248'
-training_data_path = ''
+training_data_path = 's3://sagemaker-us-west-2-394547497655/training_data/digit_recognizer'
+output_path = 's3://sagemaker-us-west-2-394547497655/training_jobs/digit_recognizer'
 
 # see https://docs.aws.amazon.com/sagemaker/latest/dg/adapt-training-container.html#byoc-training-step5
 # see https://sagemaker.readthedocs.io/en/stable/api/training/estimators.html
@@ -52,10 +53,12 @@ estimator = Estimator(
     role=role,
     base_job_name='mnist',
     instance_count=1,
+    output_path=output_path,
     # instance_type='ml.m5.xlarge',
     instance_type='local',
     environment={
-        'IS_SAGEMAKER_JOB': "true"
+        'IS_SAGEMAKER': 'true',
+        'MODEL_NAME': 'digit_recognizer',
     },
     hyperparameters={},
     # entry_point='',
