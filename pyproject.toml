@@ -8,7 +8,8 @@ packages = [
 ]
 
 [tool.poetry.scripts]
-kag = "common.kaggle_cli:main"
+kag = "ml_soln.common.kaggle_cli:main"
+train = "ml_soln.sagemaker_ops.train_entrypoint:cli"
 
 # Because this python package is installed into our Sagemaker docker image, these versions need to be compatible
 # with those used by the base image, listed here:

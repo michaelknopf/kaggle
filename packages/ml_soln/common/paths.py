@@ -22,6 +22,7 @@ class CompetitionPaths:
 
 @cache
 def competition_paths_for_package_name(package_name: str):
+    package_name = package_name.split('.')[-1]
     if sm_utils.is_sagemaker:
         return _sagemaker_paths(package_name)
     else:

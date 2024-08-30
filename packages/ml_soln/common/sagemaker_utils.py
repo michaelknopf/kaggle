@@ -16,6 +16,6 @@ class SagemakerUtils:
 
     @cached_property
     def model_name(self):
-        return os.environ.get('MODEL_NAME')
+        return os.environ.get('TRAINER_NAME')
 
 sm_utils = SagemakerUtils()

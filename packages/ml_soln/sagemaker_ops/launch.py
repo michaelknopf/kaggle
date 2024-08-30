@@ -58,7 +58,7 @@ estimator = Estimator(
     instance_type='local',
     environment={
         'IS_SAGEMAKER': 'true',
-        'MODEL_NAME': 'digit_recognizer',
+        'TRAINER_NAME': 'digit_recognizer',
     },
     hyperparameters={},
     # entry_point='',
