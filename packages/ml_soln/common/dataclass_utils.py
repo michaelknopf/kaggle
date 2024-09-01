@@ -34,8 +34,10 @@ def _convert(x, cls, parent):
         return x
 
 def _convert_dataclass(d, cls):
-    kwargs = {field.name: _convert(d.get(field.name), field.type, parent=cls)
-              for field in fields(cls)}
+    kwargs = {}
+    for field in fields(cls):
+        if field.name in d:
+            kwargs[field.name] = _convert(d.get(field.name), field.type, parent=cls)
     return cls(**kwargs)
 
 def _convert_list(values, cls, parent):
@@ -47,6 +49,8 @@ def _convert_list(values, cls, parent):
     return [_convert(v, generic_type, parent=cls) for v in values]
 
 def _resolve_forward_ref(cls, parent):
+    if isinstance(cls, str):
+        cls = ForwardRef(cls)
     if isinstance(cls, ForwardRef):
         parent_module = inspect.getmodule(parent)
         parent_globals = vars(parent_module)
