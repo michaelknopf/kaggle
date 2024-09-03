@@ -1,10 +1,11 @@
 import argparse
+
 from ml_soln.sagemaker_ops.cli import train_cli, docker_cli
 
 def main():
     parser = argparse.ArgumentParser(prog='sage',
                                      description='Sagemaker operations')
-    subparsers = parser.add_subparsers(title='commands')
+    subparsers = parser.add_subparsers(title='commands', required=True)
 
     train_parser = subparsers.add_parser('train', help='Train ML models in a sagemaker runtime')
     train_cli.add_arguments(train_parser)

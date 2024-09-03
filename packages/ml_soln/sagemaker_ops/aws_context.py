@@ -6,6 +6,9 @@ from typing import Dict
 import boto3
 import sagemaker
 import yaml
+from mypy_boto3_s3 import S3Client
+from mypy_boto3_sagemaker import SageMakerClient
+from mypy_boto3_sts import STSClient
 
 from ml_soln.common.dataclass_utils import DictClassMixin
 from ml_soln.common.paths import ROOT_DIR
@@ -69,8 +72,16 @@ class AwsContext:
         return self.boto_session.region_name
 
     @cached_property
-    def sts_client(self):
+    def sts_client(self) -> STSClient:
         return self.boto_session.client('sts')
+
+    @cached_property
+    def s3_client(self) -> S3Client:
+        return self.boto_session.client('s3')
+
+    @cached_property
+    def sagemaker_client(self) -> SageMakerClient:
+        return self.boto_session.client('sagemaker')
 
     @cached_property
     def caller_identity(self) -> Dict[str, str]:

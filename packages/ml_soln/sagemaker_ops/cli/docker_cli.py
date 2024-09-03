@@ -1,13 +1,12 @@
 import argparse
 import os
 import subprocess
+from ml_soln.common.paths import ROOT_DIR
 
 BUILD = 'build'
 PUBLISH = 'publish'
 
 def run(args):
-
-    from ml_soln.common.paths import ROOT_DIR
 
     if args.docker_operation == BUILD:
         script_filename = 'build.sh'
@@ -29,7 +28,7 @@ def run(args):
     )
 
 def add_arguments(parser: argparse.ArgumentParser = None):
-    subparsers = parser.add_subparsers(title='operation', dest='docker_operation')
+    subparsers = parser.add_subparsers(title='operation', dest='docker_operation', required=True)
 
     build_parser = subparsers.add_parser(BUILD)
     build_parser.set_defaults(func=run)
