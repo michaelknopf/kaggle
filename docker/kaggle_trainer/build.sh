@@ -1,8 +1,9 @@
+#!/bin/zsh
 # https://docs.aws.amazon.com/AmazonECR/latest/userguide/getting-started-cli.html
 
 set -e
 
-ROOT_DIR="$(git rev-parse --show-toplevel)"
+ROOT_DIR="${ROOT_DIR:-$(git rev-parse --show-toplevel)}"
 source "$ROOT_DIR/scripts/utils.sh"
 
 # login to ECR to pull base image

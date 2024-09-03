@@ -1,5 +1,5 @@
 
-export ROOT_DIR="$(git rev-parse --show-toplevel)"
+export ROOT_DIR="${ROOT_DIR:-$(git rev-parse --show-toplevel)}"
 export AWS_SAGEMAKER_ACCOUNT_ID=763104351884
 
 function __init_private_rc() {
