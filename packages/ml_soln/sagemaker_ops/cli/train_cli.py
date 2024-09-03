@@ -1,15 +1,11 @@
 import argparse
 import json
 
+from sagemaker.estimator import Estimator
+from ml_soln.sagemaker_ops.aws_context import AwsConfig, aws_context
 from ml_soln.sagemaker_ops.train_entrypoint import TRAINERS
 
 def run(args):
-
-    # Defer any imports not needed for initializing CLI
-    # This ensures --help can be printed before any other potential errors or warning occur
-    from sagemaker.estimator import Estimator
-    from ml_soln.sagemaker_ops.aws_context import AwsConfig, aws_context
-
     config: AwsConfig = aws_context.config
 
     if args.image:
