@@ -1,0 +1,5 @@
+competitions:
+  - kaggle_name: house-prices-advanced-regression-techniques
+    package: housing_prices
+  - kaggle_name: digit-recognizer
+    package: digit_recognizer

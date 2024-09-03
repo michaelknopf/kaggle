@@ -4,20 +4,30 @@ version = "1.0.0"
 description = "Solutions to Kaggle competitions"
 authors = ["Michael Knopf"]
 packages = [
-  {include = "**/*", from="packages"},
+  {include = "ml_soln", from="packages"},
 ]
 
 [tool.poetry.scripts]
-kag = "common.kaggle_cli:main"
+kag = "ml_soln.common.kaggle_cli:main"
+sage = "ml_soln.sagemaker_ops.cli.cli:main"
 
+# Because this python package is installed into our Sagemaker docker image, these versions need to be compatible
+# with those used by the base image, listed here:
+# https://github.com/aws/deep-learning-containers/blob/master/tensorflow/training/docker/2.16/py3/cu123/Dockerfile.sagemaker.gpu.core_packages.json
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.10"
+scikit-learn = "^1.5.1"
+pyyaml = "^6.0.1"
+sagemaker = "2.228.0"
+seaborn = "^0.13.2"
+pandas = "1.5.3"
+sagemaker-training = "4.7.4"
+
+[tool.poetry.group.dev.dependencies]
 jupyter = "^1.0.0"
 kaggle = "^1.6.17"
-scikit-learn = "^1.5.1"
-pandas = "^2.2.2"
-pyyaml = "^6.0.1"
-matplotlib = "^3.9.0"
+sagemaker = "2.228.0"
+tensorflow = ">=2.16.0,<2.17.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
