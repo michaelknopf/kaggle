@@ -2,7 +2,7 @@ import argparse
 import os.path
 
 from ml_soln.common.kaggle_facade import KaggleFacade
-from ml_soln.common.paths import competition_paths_for_package_name
+from ml_soln.common.paths import paths_for_package_name
 from ml_soln.common.manifest import get_manifest
 
 def main():
@@ -36,12 +36,12 @@ def main():
         submit(args.competition, args.filename, args.message)
 
 def pull_data(competition_name):
-    paths = competition_paths_for_package_name(competition_name=competition_name)
+    paths = paths_for_package_name(competition_name=competition_name)
     kaggle = KaggleFacade(competition=competition_name, paths=paths)
     kaggle.download_data()
 
 def submit(competition_name, filename, message):
-    paths = competition_paths_for_package_name(competition_name=competition_name)
+    paths = paths_for_package_name(competition_name=competition_name)
     if not filename:
         file_path = find_latest_submission(paths)
     else:

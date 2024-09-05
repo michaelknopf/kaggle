@@ -1,7 +1,7 @@
 import os
 from zipfile import ZipFile
 
-from ml_soln.common.paths import ROOT_DIR, CompetitionPaths
+from ml_soln.common.paths import ROOT_DIR, Paths
 from ml_soln.common.manifest import get_manifest
 
 # this must run before importing the kaggle module
@@ -12,22 +12,21 @@ class KaggleFacade:
 
     def __init__(self,
                  competition: str,
-                 paths: CompetitionPaths,
+                 paths: Paths,
                  kaggle_api: KaggleApi = api):
         self.competition = get_manifest().get_competition_by_package(competition)
-
         self.paths = paths
         self.api = kaggle_api
         self.api.authenticate()
 
     def download_data(self):
-        temp_zip = self.paths.data_dir / f'{self.competition.kaggle_name}.zip'
-        output_folder = self.paths.data_dir / 'kaggle_dataset'
+        temp_zip = self.paths.input_dir / f'{self.competition.kaggle_name}.zip'
+        output_folder = self.paths.input_dir / 'kaggle_dataset'
 
         if output_folder.exists():
             return
 
-        self.api.competition_download_files(self.competition.kaggle_name, path=self.paths.data_dir, quiet=False)
+        self.api.competition_download_files(self.competition.kaggle_name, path=self.paths.input_dir, quiet=False)
 
         with ZipFile(temp_zip) as f:
             f.extractall(output_folder)
