@@ -1,6 +1,6 @@
 import argparse
 
-from ml_soln.sagemaker_ops.cli import train_cli, docker_cli
+from ml_soln.cli import train_cli, docker_cli, kaggle_cli
 
 def main():
     parser = argparse.ArgumentParser(prog='sage',
@@ -12,6 +12,9 @@ def main():
 
     docker_parser = subparsers.add_parser('docker', help='Operate on the docker image(s) used in sagemaker jobs')
     docker_cli.add_arguments(docker_parser)
+
+    kaggle_parser = subparsers.add_parser('kaggle', help='Run common high-level Kaggle API flows')
+    kaggle_cli.add_arguments(kaggle_parser)
 
     args = parser.parse_args()
     args.func(args)
