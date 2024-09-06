@@ -1,10 +1,6 @@
-from datetime import datetime
-from pathlib import Path
-
 import pandas as pd
 from pandas import DataFrame, Series
 from sklearn.base import BaseEstimator
-
 # noinspection PyUnresolvedReferences
 from sklearn.experimental import enable_halving_search_cv
 # noinspection PyProtectedMember
@@ -59,11 +55,10 @@ class ModelSelection:
         ]
 
     def save_cv_results(self, cv_results: DataFrame):
-        self.paths.job_output_dir.mkdir(exist_ok=True)
-        with open(self.paths.job_output_dir / f'selection.json', 'w') as f:
+        self.paths.output_data_dir.mkdir(exist_ok=True, parents=True)
+        with open(self.paths.output_data_dir / f'selection.json', 'w') as f:
             cv_results.to_json(f, indent=2, orient='records')
-
-        with open(self.paths.job_output_dir / f'selection.csv', 'w') as f:
+        with open(self.paths.output_data_dir / f'selection.csv', 'w') as f:
             cv_results.to_csv(f, index=False)
 
     def train_and_cross_validate(self,

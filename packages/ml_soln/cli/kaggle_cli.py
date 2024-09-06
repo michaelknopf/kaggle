@@ -7,12 +7,12 @@ from ml_soln.common.manifest import get_manifest
 
 
 def pull_data(args):
-    paths = paths_for_package_name(competition_name=args.competition)
+    paths = paths_for_package_name(args.competition)
     kaggle = KaggleFacade(competition=args.competition, paths=paths)
     kaggle.download_data()
 
 def submit(args):
-    paths = paths_for_package_name(competition_name=args.competition)
+    paths = paths_for_package_name(args.competition)
     if not args.filename:
         file_path = find_latest_submission(paths)
     else:

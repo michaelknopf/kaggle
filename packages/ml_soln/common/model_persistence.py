@@ -1,13 +1,12 @@
+import json
+import pickle
 import subprocess
 from dataclasses import dataclass, asdict
-from datetime import datetime
 
 from keras.src.callbacks import History
 
-from ml_soln.common.paths import Paths
+from ml_soln.common.paths import Paths, paths_for_package_name
 from ml_soln.common.sagemaker_utils import sm_utils
-import pickle
-import json
 
 
 @dataclass
@@ -36,17 +35,19 @@ class ModelPersistence:
                                     job_name=sm_utils.job_name,
                                     note=note,
                                     sagemaker_env=dict(sm_utils.sagemaker_env))
-        self.paths.job_output_dir.mkdir(exist_ok=True)
-        with open(self.paths.job_output_dir / f'meta.json', 'w') as f:
+        self.paths.output_data_dir.mkdir(exist_ok=True, parents=True)
+        self.paths.model_dir.mkdir(exist_ok=True, parents=True)
+        with open(self.paths.output_data_dir / f'meta.json', 'w') as f:
             json.dump(asdict(meta), f, indent=2)
-        with open(self.paths.job_output_dir / f'model.pkl', 'wb') as f:
+        with open(self.paths.model_dir / f'model.pkl', 'wb') as f:
             pickle.dump(model, f, protocol=5)
         if history:
-            with open(self.paths.job_output_dir / f'history.pkl', 'wb') as f:
+            with open(self.paths.output_data_dir / f'history.pkl', 'wb') as f:
                 pickle.dump(model, f, protocol=5)
 
     def load_model(self, job_name: str):
-        with open(self.paths.make_job_output_dir(job_name), 'rb') as f:
+        paths = paths_for_package_name(package_name=self.paths.package_name, job_name=job_name)
+        with open(paths.model_dir, 'rb') as f:
             return pickle.load(f)
 
     @staticmethod
