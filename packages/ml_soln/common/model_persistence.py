@@ -35,15 +35,25 @@ class ModelPersistence:
                                     job_name=sm_utils.job_name,
                                     note=note,
                                     sagemaker_env=dict(sm_utils.sagemaker_env))
+        self._save_model_meta(meta)
+        self._save_model(model)
+        if history:
+            self._save_history(history)
+
+    def _save_model_meta(self, meta):
         self.paths.output_data_dir.mkdir(exist_ok=True, parents=True)
-        self.paths.model_dir.mkdir(exist_ok=True, parents=True)
         with open(self.paths.output_data_dir / f'meta.json', 'w') as f:
             json.dump(asdict(meta), f, indent=2)
+
+    def _save_model(self, model):
+        self.paths.model_dir.mkdir(exist_ok=True, parents=True)
         with open(self.paths.model_dir / f'model.pkl', 'wb') as f:
             pickle.dump(model, f, protocol=5)
-        if history:
-            with open(self.paths.output_data_dir / f'history.pkl', 'wb') as f:
-                pickle.dump(model, f, protocol=5)
+
+    def _save_history(self, history):
+        self.paths.output_data_dir.mkdir(exist_ok=True, parents=True)
+        with open(self.paths.output_data_dir / f'history.pkl', 'wb') as f:
+            pickle.dump(history, f, protocol=5)
 
     def load_model(self, job_name: str):
         paths = Paths.for_package_name(package_name=self.paths.package_name, job_name=job_name)
