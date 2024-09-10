@@ -1,3 +1,3 @@
-from ml_soln.common.paths import paths_for_package_name
+from ml_soln.common.paths import Paths
 
-paths = paths_for_package_name(__package__)
+paths = Paths.for_package_name(__package__)

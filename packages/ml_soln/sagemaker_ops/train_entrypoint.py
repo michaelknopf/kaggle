@@ -5,32 +5,20 @@ See https://docs.aws.amazon.com/sagemaker/latest/dg/prebuilt-containers-extend.h
 """
 import argparse
 import logging
-from typing import Dict, Callable
 
 from sagemaker_training.logging_config import configure_logger
+
+from ml_soln.common.trainers import TRAINERS
 
 configure_logger(logging.INFO)
 logger = logging.getLogger(__name__)
 
-
-def train_digit_recognizer():
-    from ml_soln.digit_recognizer import ctx
-    model = ctx().model.model
-    history = ctx().trainer.train()
-    ctx().model_persistence.save_model(model, history)
-
-
-TRAINERS: Dict[str, Callable[[], None]] = {
-    'digit_recognizer': train_digit_recognizer
-}
-
-
-def main(model_name):
-    logger.info(f'Training for model: {model_name}')
-    trainer = TRAINERS.get(model_name)
+def main(trainer_name):
+    logger.info(f'Training for model: {trainer_name}')
+    trainer = TRAINERS.get(trainer_name)
     if not trainer:
-        raise ValueError(f'No trainer found for model {model_name}')
-    trainer()
+        raise ValueError(f'No trainer found for model {trainer_name}')
+    trainer.func()
 
 
 def cli():

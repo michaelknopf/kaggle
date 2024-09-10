@@ -5,7 +5,7 @@ from dataclasses import dataclass, asdict
 
 from keras.src.callbacks import History
 
-from ml_soln.common.paths import Paths, paths_for_package_name
+from ml_soln.common.paths import Paths
 from ml_soln.common.sagemaker_utils import sm_utils
 
 
@@ -46,7 +46,7 @@ class ModelPersistence:
                 pickle.dump(model, f, protocol=5)
 
     def load_model(self, job_name: str):
-        paths = paths_for_package_name(package_name=self.paths.package_name, job_name=job_name)
+        paths = Paths.for_package_name(package_name=self.paths.package_name, job_name=job_name)
         with open(paths.model_dir, 'rb') as f:
             return pickle.load(f)
 
