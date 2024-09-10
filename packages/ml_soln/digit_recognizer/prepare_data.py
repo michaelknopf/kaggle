@@ -20,7 +20,7 @@ class DataPreparer:
 
     @staticmethod
     def _load_raw_train_data():
-        df = pd.read_csv(ctx().paths.data_dir / 'kaggle_dataset/train.csv')
+        df = pd.read_csv(ctx().paths.input_dir / 'kaggle_dataset' / 'train.csv')
         y = df["label"]
         X = df.drop(labels=["label"], axis=1)
         return X, y

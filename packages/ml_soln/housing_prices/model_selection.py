@@ -1,7 +1,7 @@
 # noinspection PyUnresolvedReferences
 from sklearn.experimental import enable_halving_search_cv
 
-from ml_soln.common.model_selection import grid_search, simple_grid_search_cv, pre_process_grid
+from ml_soln.common.model_selection import ModelSelection
 from ml_soln.housing_prices.config import load_config
 from ml_soln.housing_prices.model import HousingPricesModel, SCORE_FUNCTION
 from ml_soln.housing_prices.paths import paths
@@ -13,6 +13,7 @@ model = HousingPricesModel(model_config)
 X, y = load_train_data()
 
 def housing_grid_search_1():
+    model_selection = ModelSelection(paths)
     grid = {
         'learning_rate': [10**-1, 10**-2],
         'n_estimators': [10**3, 10**4],
@@ -20,15 +21,16 @@ def housing_grid_search_1():
         'max_leaf_nodes': [4, 8, 13],
         'max_features': [None, 'sqrt', 0.8],
     }
-    grid = pre_process_grid(grid, prefix='regress__regressor__')
-    cv = simple_grid_search_cv(estimator=model.pipeline,
-                               param_grid=grid,
-                               cv_splits=5,
-                               scoring=SCORE_FUNCTION,
-                               use_halving=True)
-    grid_search(cv, X, y, model_selection_dir=paths.model_selection_dir)
+    grid = model_selection.pre_process_grid(grid, prefix='regress__regressor__')
+    cv = model_selection.simple_grid_search_cv(estimator=model.pipeline,
+                                               param_grid=grid,
+                                               cv_splits=5,
+                                               scoring=SCORE_FUNCTION,
+                                               use_halving=True)
+    model_selection.grid_search(cv, X, y)
 
 def housing_grid_search_2():
+    model_selection = ModelSelection(paths)
     grid = [{
         'learning_rate': [10 ** -i],
         'n_estimators': [10 ** (i + 1)],
@@ -36,14 +38,14 @@ def housing_grid_search_2():
         'max_features': ['sqrt'],
     } for i in range(1, 5)]
 
-    grid = pre_process_grid(grid, prefix='regress__regressor__')
+    grid = model_selection.pre_process_grid(grid, prefix='regress__regressor__')
 
-    cv = simple_grid_search_cv(estimator=model.pipeline,
-                               param_grid=grid,
-                               cv_splits=5,
-                               scoring=SCORE_FUNCTION,
-                               use_halving=False)
-    grid_search(cv, X, y, model_selection_dir=paths.model_selection_dir)
+    cv = model_selection.simple_grid_search_cv(estimator=model.pipeline,
+                                               param_grid=grid,
+                                               cv_splits=5,
+                                               scoring=SCORE_FUNCTION,
+                                               use_halving=False)
+    model_selection.grid_search(cv, X, y)
 
 
 if __name__ == '__main__':

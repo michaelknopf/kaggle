@@ -79,17 +79,17 @@ def add_arguments(parser: argparse.ArgumentParser = None):
     parser.add_argument('--image',
                         type=str,
                         help='The URI to an image in ECR, or to a local image.')
-    parser.add_argument('--instance_count',
+    parser.add_argument('--instance-count',
                         type=int,
                         help='The number of parallel instances to run',
                         default=1)
-    parser.add_argument('--instance_type',
+    parser.add_argument('--instance-type',
                         type=str,
                         help='The name of a sagemaker-compatible instance type')
-    parser.add_argument('--job_name',
+    parser.add_argument('--job-name',
                         type=str,
                         help='The base name (prefix) of the sagemaker job')
-    parser.add_argument('--train_data_uri',
+    parser.add_argument('--train-data-uri',
                         type=str,
                         help='The full S3/file URI of the training data.')
     parser.add_argument('--env',

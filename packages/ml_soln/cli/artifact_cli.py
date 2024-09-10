@@ -1,0 +1,39 @@
+import argparse
+
+from ml_soln.common.paths import Paths
+from ml_soln.sagemaker_ops.artifact_utils import ArtifactUtils
+
+
+def pull_artifacts(args):
+    paths = Paths.for_package_name(package_name='digit_recognizer',
+                                   job_name=args.job,
+                                   is_sagemaker=False)
+    artifact_utils = ArtifactUtils(paths)
+    artifact_utils.fetch_training_job_artifacts(args.job)
+
+def publish_training_data(args):
+    pass
+
+def add_arguments(parser: argparse.ArgumentParser = None):
+    subparsers = parser.add_subparsers(title='operation', dest='docker_operation')
+
+    build_parser = subparsers.add_parser('pull',
+                                         help='Download training job artifacts from S3 to the standard local location')
+    build_parser.add_argument('job',
+                              type=str,
+                              help='Name of the sagemaker job for which to pull output artifacts from S3')
+    build_parser.set_defaults(func=pull_artifacts)
+
+    publish_parser = subparsers.add_parser('publish_train_data',
+                                           help='Push training data to S3 to use as input channel in training jobs')
+    publish_parser.set_defaults(func=publish_training_data)
+
+def main():
+    parser = argparse.ArgumentParser(prog='sage_artifacts',
+                                     description='CRUD artifacts in S3 associated with training jobs')
+    add_arguments(parser)
+    args = parser.parse_args()
+    args.func(args)
+
+if __name__ == '__main__':
+    main()

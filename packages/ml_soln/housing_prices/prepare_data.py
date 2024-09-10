@@ -22,7 +22,7 @@ def _load_train_data():
 
 
 def _load_raw_train_data():
-    df = pd.read_csv(paths.data_dir / 'kaggle_dataset/train.csv')
+    df = pd.read_csv(paths.input_dir / 'kaggle_dataset' / 'train.csv')
 
     # drop the target variable and move it to a separate vector
     X = df.drop('SalePrice', axis='columns')
@@ -43,7 +43,7 @@ def _load_test_data():
 
 
 def _load_raw_test_data():
-    return pd.read_csv(paths.data_dir / 'kaggle_dataset/test.csv')
+    return pd.read_csv(paths.input_dir / 'kaggle_dataset' / 'test.csv')
 
 
 def _pre_process(X: pd.DataFrame):

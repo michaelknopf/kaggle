@@ -30,10 +30,10 @@ def run(args):
 def add_arguments(parser: argparse.ArgumentParser = None):
     subparsers = parser.add_subparsers(title='operation', dest='docker_operation', required=True)
 
-    build_parser = subparsers.add_parser(BUILD)
+    build_parser = subparsers.add_parser(BUILD, help='Build image')
     build_parser.set_defaults(func=run)
 
-    publish_parser = subparsers.add_parser(PUBLISH)
+    publish_parser = subparsers.add_parser(PUBLISH, help='Push image to ECR')
     publish_parser.set_defaults(func=run)
 
 def main():
