@@ -8,9 +8,9 @@
 #   https://github.com/aws/deep-learning-containers/blob/master/tensorflow/training/docker/2.16/py3/cu123/Dockerfile.gpu
 FROM 763104351884.dkr.ecr.us-west-2.amazonaws.com/tensorflow-training:2.16.2-gpu-py310-cu123-ubuntu20.04-sagemaker
 
-COPY --from=dist kaggle_solutions-1.0.0-py3-none-any.whl .
+COPY --from=dist ml_solutions-1.0.0-py3-none-any.whl .
 
-RUN pip install kaggle_solutions-1.0.0-py3-none-any.whl
+RUN pip install ml_solutions-1.0.0-py3-none-any.whl
 
 COPY entrypoint.py /opt/ml/code/entrypoint.py
 

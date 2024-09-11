@@ -4,7 +4,7 @@
 set -e
 
 ROOT_DIR="${ROOT_DIR:-$(git rev-parse --show-toplevel)}"
-REPOSITORY_NAME='kaggle-trainer'
+REPOSITORY_NAME='ml-soln-trainer'
 source "$ROOT_DIR/scripts/utils.sh"
 
 # login to ECR to push to our account's repository

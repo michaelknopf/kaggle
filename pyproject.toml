@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "kaggle-solutions"
+name = "ml-solutions"
 version = "1.0.0"
-description = "Solutions to Kaggle competitions"
+description = "Solutions to Kaggle competitions and other ML challenges"
 authors = ["Michael Knopf"]
 packages = [
   {include = "ml_soln", from="packages"},

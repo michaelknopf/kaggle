@@ -16,7 +16,7 @@ def main():
     kaggle_parser = subparsers.add_parser('kaggle', help='Run common high-level Kaggle API flows')
     kaggle_cli.add_arguments(kaggle_parser)
 
-    artifact_parser = subparsers.add_parser('artifact', help='Manage artifacts in S3')
+    artifact_parser = subparsers.add_parser('artifact', aliases=['artifacts'], help='Manage artifacts in S3')
     artifact_cli.add_arguments(artifact_parser)
 
     args = parser.parse_args()
