@@ -16,6 +16,6 @@ poetry@1.8 build --format wheel --output "$ROOT_DIR/dist"
 
 # build image
 docker build \
-  -t 'kaggle-trainer:latest' \
+  -t 'ml-soln-trainer:latest' \
   --build-context dist="$ROOT_DIR/dist" \
-  "$ROOT_DIR/docker/kaggle_trainer"
+  "$ROOT_DIR/docker/ml_soln_trainer"

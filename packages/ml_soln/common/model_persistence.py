@@ -57,7 +57,12 @@ class ModelPersistence:
 
     def load_model(self, job_name: str):
         paths = Paths.for_package_name(package_name=self.paths.package_name, job_name=job_name)
-        with open(paths.model_dir, 'rb') as f:
+        with open(paths.model_dir / f'model.pkl', 'rb') as f:
+            return pickle.load(f)
+
+    def load_history(self, job_name: str):
+        paths = Paths.for_package_name(package_name=self.paths.package_name, job_name=job_name)
+        with open(paths.output_data_dir / f'history.pkl', 'rb') as f:
             return pickle.load(f)
 
     @staticmethod

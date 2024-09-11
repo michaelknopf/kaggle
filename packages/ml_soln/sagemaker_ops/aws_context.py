@@ -13,7 +13,7 @@ from mypy_boto3_sts import STSClient
 from ml_soln.common.dataclass_utils import DictClassMixin
 from ml_soln.common.paths import ROOT_DIR
 
-IMAGE_NAME = 'kaggle-trainer:latest'
+IMAGE_NAME = 'ml-soln-trainer:latest'
 
 @dataclass
 class AwsConfig(DictClassMixin):

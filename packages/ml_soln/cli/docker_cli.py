@@ -14,7 +14,7 @@ def run(args):
         script_filename = 'publish.sh'
     else:
         raise ValueError(f'Unrecognized docker operation: {args.docker_operation}')
-    script = str(ROOT_DIR / 'docker' / 'kaggle_trainer' / script_filename)
+    script = str(ROOT_DIR / 'docker' / 'ml_soln_trainer' / script_filename)
 
     os.environ['ROOT_DIR'] = str(ROOT_DIR)
     subprocess.run(
