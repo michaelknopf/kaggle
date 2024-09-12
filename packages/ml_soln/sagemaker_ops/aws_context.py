@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import cache
 from functools import cached_property
 from typing import Dict
@@ -16,15 +16,24 @@ from ml_soln.common.paths import ROOT_DIR
 IMAGE_NAME = 'ml-soln-trainer:latest'
 
 @dataclass
+class Config(DictClassMixin):
+    aws: 'AwsConfig'
+    training: 'TrainingConfig' = field(default_factory=lambda: TrainingConfig())
+
+@dataclass
 class AwsConfig(DictClassMixin):
     profile: str
     execution_role_arn: str
     sagemaker_root_bucket: str
     ecr_image_uri: str
-    training_data_path: str = 'training_data'
-    output_path: str = 'training_jobs'
     local_image_uri: str = IMAGE_NAME
     default_instance_type: str = 'ml.m5.xlarge'
+
+@dataclass
+class TrainingConfig(DictClassMixin):
+    hyperparams: Dict = field(default_factory=lambda: {})
+    training_data_path: str = 'training_data'
+    output_path: str = 'training_jobs'
 
     def __post_init__(self):
         if self.training_data_path:
@@ -32,31 +41,19 @@ class AwsConfig(DictClassMixin):
         if self.output_path:
             self.output_path = self.output_path.strip('/')
 
-    @cached_property
-    def training_data_base_uri(self):
-        return f's3://{self.sagemaker_root_bucket}/{self.training_data_path}'
-
-    @cached_property
-    def output_base_uri(self):
-        return f's3://{self.sagemaker_root_bucket}/{self.output_path}'
-
-
 @cache
-def aws_config() -> AwsConfig:
+def config() -> Config:
     config_path = ROOT_DIR / 'private' / 'config.yml'
-    d = {}
     if config_path.exists():
         with open(config_path) as f:
             d = yaml.safe_load(f)
-    aws_dict = d.get('aws', {})
-    return AwsConfig.from_dict(aws_dict)
+    return Config.from_dict(d)
 
-class AwsContext:
+class Context:
 
     def __init__(self, boto_session=None):
-        self.config = aws_config()
         if not boto_session:
-            boto_session = boto3.Session(profile_name=self.config.profile)
+            boto_session = boto3.Session(profile_name=config().aws.profile)
         self.boto_session = boto_session
 
     @cached_property
@@ -97,8 +94,16 @@ class AwsContext:
 
     @cached_property
     def ecr_image_uri(self):
-        if self.config.ecr_image_uri:
-            return self.config.ecr_image_uri
+        if config().aws.ecr_image_uri:
+            return config().aws.ecr_image_uri
         return f'{self.ecr_domain}/{IMAGE_NAME}'
 
-aws_context = AwsContext()
+    @cached_property
+    def training_data_base_uri(self):
+        return f's3://{config().aws.sagemaker_root_bucket}/{config().training.training_data_path}'
+
+    @cached_property
+    def output_base_uri(self):
+        return f's3://{config().aws.sagemaker_root_bucket}/{config().training.output_path}'
+
+aws_context = Context()

@@ -9,9 +9,13 @@ import logging
 from sagemaker_training.logging_config import configure_logger
 
 from ml_soln.common.trainers import TRAINERS
+from ml_soln.common import tf_debugging
 
 configure_logger(logging.INFO)
 logger = logging.getLogger(__name__)
+
+tf_debugging.init()
+
 
 def main(trainer_name):
     logger.info(f'Training for model: {trainer_name}')

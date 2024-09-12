@@ -16,17 +16,13 @@ class Trainer:
     def split_data():
         X, y = ctx().data_preparer.train_data()
 
-        # Set the random seed
-        random_seed = 2
-
         # Split the train and the validation set for the fitting
         X_train, X_val, Y_train, Y_val = train_test_split(
             X,
             y,
-            # train_size=1000,
-            # test_size=100,
-            test_size=0.1,
-            random_state=random_seed
+            train_size=ctx().hyperparams.train_size,
+            test_size=ctx().hyperparams.test_size,
+            random_state=ctx().hyperparams.random_state
         )
 
         return X_train, X_val, Y_train, Y_val
@@ -40,8 +36,8 @@ class Trainer:
                                                     factor=0.5,
                                                     min_lr=0.00001)
 
-        epochs = 2  # Turn epochs to 30 to get 0.9967 accuracy
-        batch_size = 86
+        epochs = ctx().hyperparams.epochs
+        batch_size = ctx().hyperparams.batch_size
 
         # With data augmentation to prevent overfitting (accuracy 0.99286)
         datagen = ImageDataGenerator(
