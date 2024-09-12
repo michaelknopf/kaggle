@@ -15,7 +15,11 @@ class SagemakerUtils:
 
     @cached_property
     def is_sagemaker(self):
-        return os.environ.get('IS_SAGEMAKER', '').lower() == 'true'
+        return self._environ_bool('IS_SAGEMAKER')
+
+    @cached_property
+    def enable_tensorflow_debugging(self):
+        return self._environ_bool('ENABLE_TF_DEBUG')
 
     @cached_property
     def model_name(self):
@@ -27,5 +31,16 @@ class SagemakerUtils:
             return sm_utils.sagemaker_env.job_name
         else:
             return f'local_{self.start_time}'
+
+    @cached_property
+    def hyperparams(self):
+        if self.is_sagemaker:
+            return sm_utils.sagemaker_env.hyperparameters
+        else:
+            return {}
+
+    @staticmethod
+    def _environ_bool(name: str):
+        return os.environ.get(name, '').lower() == 'true'
 
 sm_utils = SagemakerUtils()

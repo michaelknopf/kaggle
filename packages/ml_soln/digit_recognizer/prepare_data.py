@@ -5,6 +5,10 @@ from keras.api.utils import to_categorical
 
 from ml_soln.digit_recognizer import ctx
 
+N_DIGITS = 10
+GRAYSCALE_MAX = 255.0
+MAX_WIDTH = 28
+MAX_HEIGHT = 28
 
 class DataPreparer:
 
@@ -28,13 +32,13 @@ class DataPreparer:
     @staticmethod
     def _pre_process_x(X):
         # Normalize the data
-        X = X / 255.0
+        X = X / GRAYSCALE_MAX
 
-        # Reshape image in 3 dimensions (height = 28px, width = 28px , canal = 1)
-        X = X.values.reshape(-1, 28, 28, 1)
+        # Reshape image in 3 dimensions (height = 28px, width = 28px, canal = 1)
+        X = X.values.reshape(-1, MAX_WIDTH, MAX_HEIGHT, 1)
 
         return X
 
     @staticmethod
     def _pre_process_y(y):
-        return to_categorical(y, num_classes=10)
+        return to_categorical(y, num_classes=N_DIGITS)
