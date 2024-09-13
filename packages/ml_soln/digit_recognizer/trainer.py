@@ -51,7 +51,8 @@ class Trainer:
             width_shift_range=0.1,  # randomly shift images horizontally (fraction of total width)
             height_shift_range=0.1,  # randomly shift images vertically (fraction of total height)
             horizontal_flip=False,  # randomly flip images
-            vertical_flip=False)  # randomly flip images
+            vertical_flip=False  # randomly flip images
+        )
 
         datagen.fit(X_train)
 
