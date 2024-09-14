@@ -1,16 +1,25 @@
+import logging
 from datetime import datetime
 from pathlib import Path
 
 from pandas import DataFrame
 
+logger = logging.getLogger(__name__)
 
-def save_submission(submission_df: DataFrame, submissions_dir: Path, filename=None):
+def save_prediction(submission_df: DataFrame,
+                    predictions_dir: Path,
+                    filename=None,
+                    columns=None):
     if not filename:
-        filename = datetime.now().replace(microsecond=0).isoformat()
+        filename = _default_filename()
 
-    submissions_dir.mkdir(exist_ok=True, parents=True)
-    submission_file = submissions_dir / f'{filename}.csv'
-    with open(submission_file, 'w') as f:
-        submission_df.to_csv(f, index=False, columns=['Id', 'SalePrice'])
+    predictions_dir.mkdir(exist_ok=True, parents=True)
+    prediction_file = predictions_dir / f'{filename}.csv'
+    logger.info('Saving predictions to %s', prediction_file)
+    with open(prediction_file, 'w') as f:
+        submission_df.to_csv(f, index=False, columns=columns)
 
-    return submission_file
+    return prediction_file
+
+def _default_filename():
+    return datetime.now().replace(microsecond=0).isoformat()

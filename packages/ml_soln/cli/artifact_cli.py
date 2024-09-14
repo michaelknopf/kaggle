@@ -12,9 +12,9 @@ def pull_artifacts(args):
     artifact_utils.fetch_training_job_artifacts(args.job)
 
 def publish_training_data(args):
-    pass
+    raise NotImplementedError()
 
-def add_arguments(parser: argparse.ArgumentParser = None):
+def add_arguments(parser: argparse.ArgumentParser):
     subparsers = parser.add_subparsers(title='operation', dest='docker_operation')
 
     build_parser = subparsers.add_parser('pull',
@@ -29,7 +29,7 @@ def add_arguments(parser: argparse.ArgumentParser = None):
     publish_parser.set_defaults(func=publish_training_data)
 
 def main():
-    parser = argparse.ArgumentParser(prog='sage_artifacts',
+    parser = argparse.ArgumentParser(prog='mlops_artifacts',
                                      description='CRUD artifacts in S3 associated with training jobs')
     add_arguments(parser)
     args = parser.parse_args()

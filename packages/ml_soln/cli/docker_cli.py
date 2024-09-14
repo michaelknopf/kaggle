@@ -27,7 +27,7 @@ def run(args):
         shell=True,
     )
 
-def add_arguments(parser: argparse.ArgumentParser = None):
+def add_arguments(parser: argparse.ArgumentParser):
     subparsers = parser.add_subparsers(title='operation', dest='docker_operation', required=True)
 
     build_parser = subparsers.add_parser(BUILD, help='Build image')
@@ -37,7 +37,7 @@ def add_arguments(parser: argparse.ArgumentParser = None):
     publish_parser.set_defaults(func=run)
 
 def main():
-    parser = argparse.ArgumentParser(prog='sage_docker',
+    parser = argparse.ArgumentParser(prog='mlops_docker',
                                      description='Operate on the docker image(s) used in sagemaker jobs')
     add_arguments(parser)
     args = parser.parse_args()
