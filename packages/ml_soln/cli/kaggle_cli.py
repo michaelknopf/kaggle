@@ -1,5 +1,4 @@
 import argparse
-import os.path
 
 from ml_soln.kaggle.kaggle_facade import KaggleFacade
 from ml_soln.common.paths import Paths
@@ -13,24 +12,10 @@ def pull_data(args):
 
 def submit(args):
     paths = Paths.for_package_name(args.competition)
-    if not args.filename:
-        file_path = find_latest_submission(paths)
-    else:
-        file_path = paths.predictions_dir / args.filename
-
     kaggle = KaggleFacade(competition=args.competition, paths=paths)
-    kaggle.submit_predictions(file_path, args.message)
+    kaggle.submit_predictions(args.file, args.message)
 
-def find_latest_submission(paths):
-    submission_files = list_file_names(paths.predictions_dir)
-    return max(submission_files, key=lambda filename: os.path.getmtime(paths.predictions_dir / filename))
-
-def list_file_names(dir_path):
-    for path, dirs, filenames in dir_path.walk():
-        for filename in filenames:
-            yield filename
-
-def add_arguments(parser: argparse.ArgumentParser = None):
+def add_arguments(parser: argparse.ArgumentParser):
     subparsers = parser.add_subparsers(dest='command', required=True)
 
     competition_names = list(get_manifest().list_competitions())
@@ -49,7 +34,7 @@ def add_arguments(parser: argparse.ArgumentParser = None):
                                type=str,
                                choices=competition_names,
                                help='Name/ID of the Kaggle competition')
-    parser_submit.add_argument('--filename', type=str, help='Name of the file to submit')
+    parser_submit.add_argument('file', type=str, help='Path of the file to submit')
     parser_submit.add_argument('--message', type=str, help='Message to annotate submission')
     parser_submit.set_defaults(func=submit)
 

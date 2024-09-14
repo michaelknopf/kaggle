@@ -29,6 +29,18 @@ class DataPreparer:
         X = df.drop(labels=["label"], axis=1)
         return X, y
 
+    @cache
+    def test_data(self):
+        return self._load_test_data()
+
+    def _load_test_data(self):
+        X = self._load_raw_test_data()
+        return self._pre_process_x(X)
+
+    @staticmethod
+    def _load_raw_test_data():
+        return pd.read_csv(ctx().paths.input_dir / 'kaggle_dataset' / 'test.csv')
+
     @staticmethod
     def _pre_process_x(X):
         # Normalize the data

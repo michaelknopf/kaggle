@@ -1,6 +1,7 @@
 import argparse
 
-from ml_soln.cli import train_cli, docker_cli, kaggle_cli, artifact_cli
+from ml_soln.cli import train_cli, docker_cli, kaggle_cli, artifact_cli, predict_cli
+
 
 def main():
     parser = argparse.ArgumentParser(prog='mlops',
@@ -9,6 +10,9 @@ def main():
 
     train_parser = subparsers.add_parser('train', help='Train ML models in a sagemaker runtime')
     train_cli.add_arguments(train_parser)
+
+    predict_parser = subparsers.add_parser('predict', help='Predict results for a dataset using a trained model')
+    predict_cli.add_arguments(predict_parser)
 
     docker_parser = subparsers.add_parser('docker', help='Operate on the docker image(s) used in sagemaker jobs')
     docker_cli.add_arguments(docker_parser)

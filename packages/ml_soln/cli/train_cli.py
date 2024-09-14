@@ -69,7 +69,7 @@ def run(args):
     )
 
 
-def add_arguments(parser: argparse.ArgumentParser = None):
+def add_arguments(parser: argparse.ArgumentParser):
     parser.add_argument('trainer',
                         type=str,
                         choices=list(sorted(TRAINERS.keys())),
@@ -105,7 +105,7 @@ def add_arguments(parser: argparse.ArgumentParser = None):
     parser.set_defaults(func=run)
 
 def main():
-    parser = argparse.ArgumentParser(prog='sage_train',
+    parser = argparse.ArgumentParser(prog='mlops_train',
                                      description='Train ML models in a sagemaker runtime')
     add_arguments(parser)
     args = parser.parse_args()
