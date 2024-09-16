@@ -1,9 +1,9 @@
-from functools import cache
 import itertools
+from functools import cache
 
-import pandas as pd
 import numpy as np
-from ml_soln.housing_prices import ctx
+import pandas as pd
+from ml_soln.digit_recognizer import ctx
 
 
 class DataPreparer:
@@ -17,8 +17,7 @@ class DataPreparer:
         self._pre_process_x(X)
         return X, y
 
-    @staticmethod
-    def _load_raw_train_data():
+    def _load_raw_train_data(self):
         df = pd.read_csv(ctx().paths.input_dir / 'kaggle_dataset' / 'train.csv')
         # drop the target variable and move it to a separate vector
         X = df.drop('SalePrice', axis='columns')
@@ -34,12 +33,10 @@ class DataPreparer:
         self._pre_process_x(X)
         return X
 
-    @staticmethod
-    def _load_raw_test_data():
+    def _load_raw_test_data(self):
         return pd.read_csv(ctx().paths.input_dir / 'kaggle_dataset' / 'test.csv')
 
-    @staticmethod
-    def _pre_process_x(X: pd.DataFrame):
+    def _pre_process_x(self, X: pd.DataFrame):
         X['MSZoning'] = X['MSZoning'].replace('C (all)', 'C')
 
         X['BldgType'] = X['BldgType'].replace('2fmCon', '2FmCon')

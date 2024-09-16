@@ -19,8 +19,7 @@ class ModelPersistenceMeta:
 
 class ModelPersistence:
 
-    def __init__(self,
-                 paths: Paths):
+    def __init__(self, paths: Paths):
         self.paths = paths
         self.commit_hash = None
         if not sm_utils.is_sagemaker:

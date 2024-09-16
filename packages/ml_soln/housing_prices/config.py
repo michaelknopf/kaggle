@@ -1,16 +1,13 @@
 from dataclasses import dataclass
-from functools import cache
+from pathlib import Path
 from typing import List, Optional
 
 import yaml
-
 from ml_soln.common.dataclass_utils import DictClassMixin
-from ml_soln.housing_prices import ctx
 
 
-@cache
-def load_config() -> 'ModelConfig':
-    with open(ctx().paths.package_dir / 'feature_config.yml') as f:
+def load_config(package_dir: Path) -> 'ModelConfig':
+    with open(package_dir / 'feature_config.yml') as f:
         config_dict = yaml.safe_load(f)
     return ModelConfig.from_dict(config_dict)
 
@@ -28,5 +25,5 @@ class ModelConfig(DictClassMixin):
 class FeatureConfig(DictClassMixin):
     name: str
     type: str
-    categories: Optional[List[str]]
-    null_rep: Optional[str]
+    categories: Optional[List[str]] = None
+    null_rep: Optional[str] = None

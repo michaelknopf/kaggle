@@ -8,16 +8,9 @@ from sklearn.impute import KNNImputer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder
 
-from ml_soln.housing_prices.config import ModelConfig
-from ml_soln.common.model_persistence import ModelPersistence
-
 SCORE_FUNCTION = 'neg_root_mean_squared_log_error'
 
 class HousingPricesModel:
-
-    def __init__(self, model_config: ModelConfig):
-        self.model_config = model_config
-        self.model_persistence = ModelPersistence(ctx().paths)
 
     @cached_property
     def pipeline(self):
@@ -50,7 +43,7 @@ class HousingPricesModel:
         return ColumnTransformer(transformers, remainder='passthrough', force_int_remainder_cols=False)
 
     def _create_categorical_transformer(self):
-        feature_configs = list(self.model_config.categorical_features())
+        feature_configs = list(ctx().model_config.categorical_features())
         categories = [f.categories for f in feature_configs]
         feature_names = [f.name for f in feature_configs]
         one_hot_encoder = OneHotEncoder(dtype='int',
@@ -60,7 +53,7 @@ class HousingPricesModel:
         return 'Categorical Preprocessor', one_hot_encoder, feature_names
 
     def _create_ordinal_transformer(self):
-        feature_configs = list(self.model_config.ordinal_features())
+        feature_configs = list(ctx().model_config.ordinal_features())
         categories = [f.categories for f in feature_configs]
         feature_names = [f.name for f in feature_configs]
         encoder = OrdinalEncoder(categories=categories,
