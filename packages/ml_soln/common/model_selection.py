@@ -1,4 +1,7 @@
+import logging
+
 import pandas as pd
+from ml_soln.common.paths import Paths
 from pandas import DataFrame, Series
 from sklearn.base import BaseEstimator
 # noinspection PyUnresolvedReferences
@@ -7,7 +10,7 @@ from sklearn.experimental import enable_halving_search_cv
 from sklearn.model_selection import GridSearchCV, HalvingGridSearchCV
 from sklearn.model_selection._search import BaseSearchCV
 
-from ml_soln.common.paths import Paths
+logger = logging.getLogger(__name__)
 
 
 class ModelSelection:
@@ -39,8 +42,8 @@ class ModelSelection:
         cv.fit(X, y)
         df = pd.DataFrame(cv.cv_results_)
         self.save_cv_results(df)
-        print(f'Best params: {cv.best_params_}')
-        print(f'Best score: {cv.best_score_}')
+        logger.info(f'Best params: {cv.best_params_}')
+        logger.info(f'Best score: {cv.best_score_}')
         return df
 
     @staticmethod
@@ -74,9 +77,8 @@ class ModelSelection:
                                                use_halving=False)
         cv_results = self.grid_search(search_cv, X, y)
 
-        print('')
-        print(f'Score mean: {cv_results["mean_test_score"]:.2f}')
-        print(f'Score standard deviation: {cv_results["std_test_score"]:.2f}')
-        print(f'Total training time: {cv_results["mean_fit_time"] * cv_splits:.2f}')
+        logger.info(f'Score mean: {cv_results["mean_test_score"]:.2f}')
+        logger.info(f'Score standard deviation: {cv_results["std_test_score"]:.2f}')
+        logger.info(f'Total training time: {cv_results["mean_fit_time"] * cv_splits:.2f}')
 
         return cv_results

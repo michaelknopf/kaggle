@@ -4,13 +4,13 @@ from typing import List, Optional
 
 import yaml
 
-from ml_soln.housing_prices.paths import paths
 from ml_soln.common.dataclass_utils import DictClassMixin
+from ml_soln.housing_prices import ctx
 
 
 @cache
 def load_config() -> 'ModelConfig':
-    with open(paths.package_dir / 'feature_config.yml') as f:
+    with open(ctx().paths.package_dir / 'feature_config.yml') as f:
         config_dict = yaml.safe_load(f)
     return ModelConfig.from_dict(config_dict)
 
