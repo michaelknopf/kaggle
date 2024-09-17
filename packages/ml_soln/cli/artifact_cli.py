@@ -1,11 +1,14 @@
 import argparse
 
-from ml_soln.common.paths import Paths
 from ml_soln.common.trainers import PACKAGES
-from ml_soln.sagemaker_ops.artifact_utils import ArtifactUtils
 
 
 def pull_artifacts(args):
+
+    # defer imports to improve CLI startup time
+    from ml_soln.common.paths import Paths
+    from ml_soln.sagemaker_ops.artifact_utils import ArtifactUtils
+
     paths = Paths.for_package_name(package_name=args.package,
                                    job_name=args.job,
                                    is_sagemaker=False)
@@ -13,6 +16,9 @@ def pull_artifacts(args):
     artifact_utils.fetch_training_job_artifacts(args.job)
 
 def push_training_data(args):
+    from ml_soln.common.paths import Paths
+    from ml_soln.sagemaker_ops.artifact_utils import ArtifactUtils
+
     paths = Paths.for_package_name(package_name=args.package,
                                    is_sagemaker=False)
     artifact_utils = ArtifactUtils(paths)

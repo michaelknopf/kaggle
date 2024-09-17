@@ -1,12 +1,14 @@
 import argparse
 import os
 import subprocess
-from ml_soln.common.paths import ROOT_DIR
 
 BUILD = 'build'
 PUBLISH = 'publish'
 
 def run(args):
+
+    # defer imports to improve CLI startup time
+    from ml_soln.common.paths import ROOT_DIR
 
     if args.docker_operation == BUILD:
         script_filename = 'build.sh'
