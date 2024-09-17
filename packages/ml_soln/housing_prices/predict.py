@@ -1,22 +1,17 @@
-from ml_soln.housing_prices.config import load_config
-from ml_soln.housing_prices.model import HousingPricesModel
-from ml_soln.housing_prices.paths import paths
-from ml_soln.housing_prices.prepare_data import load_train_data, load_test_data
+from ml_soln.housing_prices import ctx
 from ml_soln.common.predict import save_prediction
 
 
 def train_and_test():
-    model_config = load_config()
-    model = HousingPricesModel(model_config)
 
-    X, y = load_train_data()
-    model.pipeline.fit(X, y)
+    X, y = ctx().data_preparer.train_data()
+    ctx().model.pipeline.fit(X, y)
 
-    X_test = load_test_data()
-    predictions = model.pipeline.predict(X_test)
+    X_test = ctx().data_preparer.test_data()
+    predictions = ctx().model.pipeline.predict(X_test)
     X_test['SalePrice'] = predictions
 
-    return save_prediction(X_test, paths.predictions_dir, columns=['Id', 'SalePrice'])
+    return save_prediction(X_test, ctx().paths.predictions_dir, columns=['Id', 'SalePrice'])
 
 
 if __name__ == '__main__':

@@ -6,6 +6,9 @@ from ml_soln.sagemaker_ops.aws_context import aws_context, config
 from ml_soln.sagemaker_ops.train_entrypoint import TRAINERS
 
 def run(args):
+
+    trainer = TRAINERS[args.trainer]
+
     if args.image:
         image_uri = args.image
     elif args.local:
@@ -16,7 +19,7 @@ def run(args):
     if args.job_name:
         base_job_name = args.job_name
     else:
-        base_job_name = args.trainer
+        base_job_name = trainer.name
         # the job name must satisfy this regex:
         # ^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}
         base_job_name = base_job_name.replace('_', '-')
@@ -32,7 +35,7 @@ def run(args):
 
     env_variables = {
         'IS_SAGEMAKER': 'true',
-        'TRAINER_NAME': args.trainer,
+        'TRAINER_NAME': trainer.name,
     }
     env_variables.update(args.env)
 
@@ -53,7 +56,7 @@ def run(args):
         role=config().aws.execution_role_arn,
         base_job_name=base_job_name,
         instance_count=args.instance_count,
-        output_path=f'{aws_context.output_base_uri}/{args.trainer}',
+        output_path=f'{aws_context.output_base_uri}/{trainer.name}',
         instance_type=instance_type,
         environment=env_variables,
         hyperparameters=hyperparams,
@@ -64,7 +67,7 @@ def run(args):
 
     estimator.fit(
         inputs={
-            'train': f'{aws_context.training_data_base_uri}/{args.trainer}'
+            'train': f'{aws_context.training_data_base_uri}/{trainer.package_name}'
         }
     )
 

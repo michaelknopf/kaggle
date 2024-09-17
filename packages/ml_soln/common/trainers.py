@@ -18,6 +18,14 @@ def _train_digit_recognizer():
     history = ctx().trainer.train()
     ctx().model_persistence.save_model(model, history)
 
+def _train_housing_prices():
+    from ml_soln.housing_prices.model import ctx
+    ctx().model.fit()
+    ctx().model.persist()
+
+def _housing_prices_grid_search():
+    from ml_soln.housing_prices.model import ctx
+    ctx().model_selection.housing_grid_search_1()
 
 TRAINERS: Dict[str, Trainer] = {
     t.name: t for t in (
@@ -25,5 +33,16 @@ TRAINERS: Dict[str, Trainer] = {
             name='digit_recognizer',
             func=_train_digit_recognizer
         ),
+        Trainer(
+            name='housing_prices',
+            func=_train_housing_prices
+        ),
+        Trainer(
+            name='housing_prices_search',
+            package_name='housing_prices',
+            func=_housing_prices_grid_search
+        ),
     )
 }
+
+PACKAGES = list(sorted(set(t.package_name for t in TRAINERS.values())))
