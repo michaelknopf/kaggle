@@ -6,11 +6,12 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from urllib import parse
 
+import botocore.exceptions
 from mypy_boto3_sagemaker.type_defs import DescribeTrainingJobResponseTypeDef
 
 from ml_soln.common.paths import Paths
 from ml_soln.common.trainers import TRAINERS
-from ml_soln.sagemaker_ops.aws_context import aws_context
+from ml_soln.sagemaker_ops.aws_context import aws_context, config
 
 logger = logging.getLogger(__name__)
 
@@ -83,14 +84,40 @@ class ArtifactUtils:
             dir_path = Path(dir_name)
             for filename in tarfile_names:
                 key = f'{path}/{filename}'
-                logger.info('Downloading s3://%s/%s to %s', bucket, key, dir_name)
                 file_path = dir_path / filename
-                aws_context.s3_client.download_file(Bucket=bucket, Key=key, Filename=str(file_path))
-                dest_folder = self.tar_to_dir[filename]
-                dest_folder.mkdir(exist_ok=True, parents=True)
-                logger.info('Extracting %s to %s', file_path, dest_folder)
-                with tarfile.open(file_path) as f:
-                    f.extractall(dest_folder)
+                if self.head_object(bucket=bucket, key=key):
+                    logger.info('Downloading s3://%s/%s to %s', bucket, key, dir_name)
+                    aws_context.s3_client.download_file(Bucket=bucket, Key=key, Filename=str(file_path))
+                    dest_folder = self.tar_to_dir[filename]
+                    dest_folder.mkdir(exist_ok=True, parents=True)
+                    logger.info('Extracting %s to %s', file_path, dest_folder)
+                    with tarfile.open(file_path) as f:
+                        f.extractall(dest_folder)
+                else:
+                    logger.info('s3://%s/%s does not exist. Skipping...', bucket, key)
+
+    def push_training_artifacts(self):
+        """
+        Adapted from https://gist.github.com/feelinc/d1f541af4f31d09a2ec3
+        """
+        bucket = config().aws.sagemaker_root_bucket
+
+        for root, dirs, files in os.walk(self.paths.input_dir):
+            root_path = Path(root)
+            for filename in files:
+                # construct the full local path
+                local_path = root_path / filename
+
+                # construct the full S3 path
+                training_data_path = Path(config().training.training_data_path)
+                relative_path = local_path.relative_to(self.paths.input_dir)
+                key = str(training_data_path / self.paths.package_name / relative_path)
+
+                if self.head_object(bucket=bucket, key=key):
+                    logger.info('Skipping since s3://%s/%s already exists', bucket, key)
+                else:
+                    logger.info('Uploading s3://%s/%s', bucket, key)
+                    aws_context.s3_client.upload_file(local_path, bucket, key)
 
     @staticmethod
     def parse_s3_uri(uri):
@@ -103,8 +130,10 @@ class ArtifactUtils:
         filename = os.path.basename(key)
         return bucket, path, filename
 
-
-if __name__ == '__main__':
-    j = 'digit-recognizer-2024-09-06-23-14-11-214'
-    ps = Paths.for_package_name('digit_recognizer', job_name=j, is_sagemaker=False)
-    ArtifactUtils(ps).fetch_training_job_artifacts(job_name=j)
+    @staticmethod
+    def head_object(bucket, key):
+        try:
+            return aws_context.s3_client.head_object(Bucket=bucket, Key=key)
+        except botocore.exceptions.ClientError as e:
+            if e.response['Error']['Code'] != '404':
+                raise e

@@ -42,7 +42,8 @@ class HousingPricesModel:
         ]
         return ColumnTransformer(transformers, remainder='passthrough', force_int_remainder_cols=False)
 
-    def _create_categorical_transformer(self):
+    @staticmethod
+    def _create_categorical_transformer():
         feature_configs = list(ctx().model_config.categorical_features())
         categories = [f.categories for f in feature_configs]
         feature_names = [f.name for f in feature_configs]
@@ -52,7 +53,8 @@ class HousingPricesModel:
                                         handle_unknown='infrequent_if_exist')
         return 'Categorical Preprocessor', one_hot_encoder, feature_names
 
-    def _create_ordinal_transformer(self):
+    @staticmethod
+    def _create_ordinal_transformer():
         feature_configs = list(ctx().model_config.ordinal_features())
         categories = [f.categories for f in feature_configs]
         feature_names = [f.name for f in feature_configs]

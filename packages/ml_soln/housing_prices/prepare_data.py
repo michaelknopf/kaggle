@@ -3,7 +3,7 @@ from functools import cache
 
 import numpy as np
 import pandas as pd
-from ml_soln.digit_recognizer import ctx
+from ml_soln.housing_prices import ctx
 
 
 class DataPreparer:

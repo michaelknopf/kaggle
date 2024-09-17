@@ -39,7 +39,10 @@ TRAINERS: Dict[str, Trainer] = {
         ),
         Trainer(
             name='housing_prices_search',
+            package_name='housing_prices',
             func=_housing_prices_grid_search
         ),
     )
 }
+
+PACKAGES = list(sorted(set(t.package_name for t in TRAINERS.values())))
