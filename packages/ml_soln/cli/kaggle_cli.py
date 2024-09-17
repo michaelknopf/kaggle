@@ -1,21 +1,29 @@
 import argparse
 
-from ml_soln.kaggle.kaggle_facade import KaggleFacade
-from ml_soln.common.paths import Paths
-from ml_soln.common.manifest import get_manifest
-
 
 def pull_data(args):
+
+    # defer imports to improve CLI startup time
+    from ml_soln.kaggle.kaggle_facade import KaggleFacade
+    from ml_soln.common.paths import Paths
+
     paths = Paths.for_package_name(args.competition)
     kaggle = KaggleFacade(competition=args.competition, paths=paths)
     kaggle.download_data()
 
 def submit(args):
+
+    # defer imports to improve CLI startup time
+    from ml_soln.kaggle.kaggle_facade import KaggleFacade
+    from ml_soln.common.paths import Paths
+
     paths = Paths.for_package_name(args.competition)
     kaggle = KaggleFacade(competition=args.competition, paths=paths)
     kaggle.submit_predictions(args.file, args.message)
 
 def add_arguments(parser: argparse.ArgumentParser):
+    from ml_soln.common.manifest import get_manifest
+
     subparsers = parser.add_subparsers(dest='command', required=True)
 
     competition_names = list(get_manifest().list_competitions())

@@ -1,11 +1,13 @@
 import argparse
 import json
 
-from sagemaker.estimator import Estimator
-from ml_soln.sagemaker_ops.aws_context import aws_context, config
-from ml_soln.sagemaker_ops.train_entrypoint import TRAINERS
+from ml_soln.common.trainers import TRAINERS
 
 def run(args):
+
+    # defer imports to improve CLI startup time
+    from sagemaker.estimator import Estimator
+    from ml_soln.sagemaker_ops.aws_context import aws_context, config
 
     trainer = TRAINERS[args.trainer]
 
