@@ -1,4 +1,5 @@
-import argparse
+# PYTHON_ARGCOMPLETE_OK
+import argparse, argcomplete
 
 from ml_soln.cli import train_cli, docker_cli, kaggle_cli, artifact_cli, predict_cli
 
@@ -20,9 +21,10 @@ def main():
     kaggle_parser = subparsers.add_parser('kaggle', help='Run common high-level Kaggle API flows')
     kaggle_cli.add_arguments(kaggle_parser)
 
-    artifact_parser = subparsers.add_parser('artifact', aliases=['artifacts'], help='Manage artifacts in S3')
+    artifact_parser = subparsers.add_parser('artifacts', help='Manage artifacts in S3')
     artifact_cli.add_arguments(artifact_parser)
 
+    argcomplete.autocomplete(parser)
     args = parser.parse_args()
     args.func(args)
 

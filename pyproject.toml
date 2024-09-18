@@ -28,6 +28,7 @@ jupyter = "^1.0.0"
 kaggle = "^1.6.17"
 sagemaker = "2.228.0"
 tensorflow = ">=2.16.0,<2.17.0"
+argcomplete = "^3.5.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
