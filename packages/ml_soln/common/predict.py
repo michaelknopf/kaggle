@@ -6,6 +6,7 @@ from pandas import DataFrame
 
 logger = logging.getLogger(__name__)
 
+
 def save_prediction(submission_df: DataFrame,
                     predictions_dir: Path,
                     filename=None,

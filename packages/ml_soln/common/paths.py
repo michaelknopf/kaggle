@@ -22,6 +22,10 @@ class Paths:
     output_intermediate_dir: Path
     predictions_dir: Path
 
+    def clone(self, job_name: str):
+        return self.for_package_name(package_name=self.package_name,
+                                     job_name=job_name)
+
     @classmethod
     def for_package_name(cls,
                          package_name: str,
