@@ -1,5 +1,6 @@
 # PYTHON_ARGCOMPLETE_OK
-import argparse, argcomplete
+import argcomplete
+import argparse
 
 from ml_soln.cli import train_cli, docker_cli, kaggle_cli, artifact_cli, predict_cli
 

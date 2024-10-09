@@ -1,4 +1,4 @@
-from functools import cached_property
+from functools import cached_property, cache
 
 from keras.api.layers import Dense, Dropout, Flatten, Conv2D, MaxPool2D, Input
 from keras.api.models import Sequential
@@ -39,6 +39,7 @@ class Model:
     def optimizer(self):
         return RMSprop(learning_rate=0.001, rho=0.9, epsilon=1e-08)
 
+    @cache
     def _compile(self, model):
         model.compile(optimizer=self.optimizer,
                       loss=self.LOSS,

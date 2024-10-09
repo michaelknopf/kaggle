@@ -3,3 +3,5 @@ competitions:
     package: housing_prices
   - kaggle_name: digit-recognizer
     package: digit_recognizer
+  - kaggle_name: nlp-getting-started
+    package: disaster_tweets

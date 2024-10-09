@@ -62,5 +62,5 @@ class Trainer:
                                      epochs=epochs,
                                      validation_data=(X_val, Y_val),
                                      verbose=2,
-                                     steps_per_epoch=X_train.shape[0] // (batch_size * epochs),
+                                     # steps_per_epoch=X_train.shape[0] // (batch_size * epochs),
                                      callbacks=[learning_rate_reduction])

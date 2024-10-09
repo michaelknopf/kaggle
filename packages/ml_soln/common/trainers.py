@@ -18,6 +18,12 @@ def _train_digit_recognizer():
     history = ctx().trainer.train()
     ctx().model_persistence.save_model(model, history)
 
+def _train_disaster_tweets():
+    from ml_soln.disaster_tweets import ctx
+    model = ctx().model.model
+    history = ctx().trainer.train()
+    ctx().model_persistence.save_model(model, history)
+
 def _train_housing_prices():
     from ml_soln.housing_prices.model import ctx
     ctx().model.fit()
@@ -32,6 +38,10 @@ TRAINERS: Dict[str, Trainer] = {
         Trainer(
             name='digit_recognizer',
             func=_train_digit_recognizer
+        ),
+        Trainer(
+            name='disaster_tweets',
+            func=_train_disaster_tweets
         ),
         Trainer(
             name='housing_prices',
