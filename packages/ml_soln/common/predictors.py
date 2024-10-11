@@ -20,6 +20,10 @@ def _predict_housing_prices(job_name: str):
     from ml_soln.housing_prices.predict import predict_and_save
     predict_and_save(job_name=job_name)
 
+def _predict_disaster_tweets(job_name: str):
+    from ml_soln.disaster_tweets.predict import predict_and_save
+    predict_and_save(job_name=job_name)
+
 PREDICTORS: Dict[str, Predictor] = {
     t.name: t for t in (
         Predictor(
@@ -30,5 +34,9 @@ PREDICTORS: Dict[str, Predictor] = {
             name='housing_prices',
             func=_predict_housing_prices
         ),
+        Predictor(
+            name='disaster_tweets',
+            func=_predict_disaster_tweets
+        )
     )
 }

@@ -8,6 +8,7 @@ from urllib import parse
 
 import botocore.exceptions
 from mypy_boto3_sagemaker.type_defs import DescribeTrainingJobResponseTypeDef
+from rich import progress as pg
 
 from ml_soln.common.paths import Paths
 from ml_soln.common.trainers import TRAINERS
@@ -85,9 +86,29 @@ class ArtifactUtils:
             for filename in tarfile_names:
                 key = f'{path}/{filename}'
                 file_path = dir_path / filename
-                if self.head_object(bucket=bucket, key=key):
+                head = self.head_object(bucket=bucket, key=key)
+                if head:
                     logger.info('Downloading s3://%s/%s to %s', bucket, key, dir_name)
-                    aws_context.s3_client.download_file(Bucket=bucket, Key=key, Filename=str(file_path))
+
+                    with pg.Progress(
+                            pg.TextColumn("[bold blue]{task.description}"),
+                            pg.BarColumn(),
+                            # "[progress.percentage]{task.percentage:>3.1f}%",
+                            pg.DownloadColumn(),
+                            pg.TransferSpeedColumn(),
+                    ) as progress:
+
+                        # Add a task to the progress bar
+                        download_task = progress.add_task(f"Downloading {filename}", total=head['ContentLength'])
+
+                        # Start the download with the progress callback
+                        aws_context.s3_client.download_file(
+                            Bucket=bucket,
+                            Key=key,
+                            Filename=str(file_path),
+                            Callback=lambda bytes_amount: progress.update(download_task, advance=bytes_amount)
+                        )
+
                     dest_folder = self.tar_to_dir[filename]
                     dest_folder.mkdir(exist_ok=True, parents=True)
                     logger.info('Extracting %s to %s', file_path, dest_folder)

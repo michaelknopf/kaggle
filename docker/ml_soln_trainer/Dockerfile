@@ -10,8 +10,16 @@ FROM 763104351884.dkr.ecr.us-west-2.amazonaws.com/tensorflow-training:2.16.2-gpu
 
 COPY --from=dist ml_solutions-1.0.0-py3-none-any.whl .
 
+# Create a dummy tensorflow package to prevent pip from attempting to install it.
+# This is because the image contains a custom AWS build of tensorflow, but the package is called tensorflow-gpu.
+# When dependencies require tensorflow, pip does not realize that it is already present,
+# so it attempts to install the open source version.
+# See https://stackoverflow.com/a/76423135
+RUN mkdir /usr/local/lib/python3.10/site-packages/tensorflow-2.16.2.dist-info
+RUN touch /usr/local/lib/python3.10/site-packages/tensorflow-2.16.2.dist-info/METADATA
+
 RUN pip install ml_solutions-1.0.0-py3-none-any.whl
 
 COPY entrypoint.py /opt/ml/code/entrypoint.py
 
-ENV SAGEMAKER_PROGRAM entrypoint.py
+ENV SAGEMAKER_PROGRAM=entrypoint.py

@@ -41,7 +41,7 @@ def run(args):
     }
     env_variables.update(args.env)
 
-    # TODO: deep merge, do not mutate
+    # TODO: deep merge instead of .update(), to avoid mutating
     hyperparams = config().training.hyperparams
     hyperparams.update(args.hyper_params)
 
