@@ -13,7 +13,8 @@ class Model:
     @cached_property
     def model(self) -> Sequential:
         """
-        CNN model
+        CNN model architecture adapted from
+        https://www.kaggle.com/code/yassineghouzam/introduction-to-cnn-keras-0-997-top-6
         """
         model = Sequential([
             Input(shape=(28, 28, 1)),
