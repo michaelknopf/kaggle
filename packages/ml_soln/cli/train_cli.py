@@ -67,11 +67,13 @@ def run(args):
         checkpoint_local_path=None,
     )
 
-    estimator.fit(
-        inputs={
+    inputs = None
+    if trainer.has_training_data:
+        inputs = {
             'train': f'{aws_context.training_data_base_uri}/{trainer.package_name}'
         }
-    )
+
+    estimator.fit(inputs=inputs)
 
 
 def add_arguments(parser: argparse.ArgumentParser):

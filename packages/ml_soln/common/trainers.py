@@ -7,6 +7,7 @@ class Trainer:
     name: str
     func: Callable[[], None]
     package_name: str = None
+    has_training_data: bool = True
 
     def __post_init__(self):
         if not self.package_name:
@@ -33,6 +34,12 @@ def _housing_prices_grid_search():
     from ml_soln.housing_prices.model import ctx
     ctx().model_selection.housing_grid_search_1()
 
+def _train_connect_x():
+    from ml_soln.connectx import ctx
+    model = ctx().model.model
+    history = ctx().trainer.train()
+    ctx().model_persistence.save_model(model, history)
+
 TRAINERS: Dict[str, Trainer] = {
     t.name: t for t in (
         Trainer(
@@ -51,6 +58,12 @@ TRAINERS: Dict[str, Trainer] = {
             name='housing_prices_search',
             package_name='housing_prices',
             func=_housing_prices_grid_search
+        ),
+        Trainer(
+            name='connectx',
+            package_name='connectx',
+            func=_train_connect_x,
+            has_training_data=False
         ),
     )
 }
