@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from functools import cache
 from pathlib import Path
+from typing import Optional
 
 from ml_soln.common.sagemaker_utils import sm_utils
 
@@ -16,7 +17,7 @@ ROOT_DIR = PACKAGES_DIR.parent
 class Paths:
     package_name: str
     package_dir: Path
-    input_dir: Path
+    input_dir: Optional[Path]
     model_dir: Path
     output_data_dir: Path
     output_intermediate_dir: Path
@@ -64,10 +65,12 @@ class Paths:
         package_dir = cls.make_package_dir(package_name)
         env = sm_utils.sagemaker_env
         output_data_dir = Path(env.output_data_dir)
+        input_dir = env.channel_input_dirs.get('train')
+        input_dir = Path(input_dir) if input_dir else None
         return Paths(
             package_name=package_name,
             package_dir=package_dir,
-            input_dir=Path(env.channel_input_dirs['train']),
+            input_dir=input_dir,
             model_dir=Path(env.model_dir),
             output_data_dir=output_data_dir,
             output_intermediate_dir=Path(env.output_intermediate_dir),

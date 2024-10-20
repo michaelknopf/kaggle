@@ -18,6 +18,10 @@ COPY --from=dist ml_solutions-1.0.0-py3-none-any.whl .
 RUN mkdir /usr/local/lib/python3.10/site-packages/tensorflow-2.16.2.dist-info
 RUN touch /usr/local/lib/python3.10/site-packages/tensorflow-2.16.2.dist-info/METADATA
 
+# Dummy torch package
+RUN mkdir /usr/local/lib/python3.10/site-packages/torch-2.2.2.dist-info
+RUN touch /usr/local/lib/python3.10/site-packages/torch-2.2.2.dist-info/METADATA
+
 RUN pip install ml_solutions-1.0.0-py3-none-any.whl
 
 COPY entrypoint.py /opt/ml/code/entrypoint.py

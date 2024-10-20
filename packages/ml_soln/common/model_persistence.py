@@ -5,7 +5,7 @@ from dataclasses import dataclass, asdict
 
 from keras.src.callbacks import History
 
-from ml_soln.common.paths import Paths
+from ml_soln.common.paths import Paths, ROOT_DIR
 from ml_soln.common.sagemaker_utils import sm_utils
 
 
@@ -67,6 +67,7 @@ class ModelPersistence:
     @staticmethod
     def _get_git_commit_hash():
         result = subprocess.run(['git', 'rev-parse', 'HEAD'],
+                                cwd=str(ROOT_DIR),
                                 capture_output=True,
                                 text=True,
                                 check=True)
