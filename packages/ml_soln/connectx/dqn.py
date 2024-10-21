@@ -9,7 +9,7 @@ from keras.src.optimizers import Adam
 
 from ml_soln.common.dataclass_utils import DictClassMixin
 from ml_soln.connectx import ctx
-from ml_soln.connectx.connect_x_gym import ConnectXObservation
+from ml_soln.connectx.stubs import ConnectXObservation
 
 
 @dataclass

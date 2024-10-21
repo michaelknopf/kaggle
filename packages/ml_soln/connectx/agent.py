@@ -2,7 +2,7 @@ import numpy as np
 from keras import Model
 
 from ml_soln.connectx import ctx
-from ml_soln.connectx.connect_x_gym import ConnectXObservation, ConnectXConfiguration
+from ml_soln.connectx.stubs import ConnectXObservation, ConnectXConfiguration
 
 
 def model_agent(model: Model):

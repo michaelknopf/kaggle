@@ -16,3 +16,4 @@ class HyperParams(DictClassMixin):
     min_epsilon: float = 0.1
     decay: float = 0.99999
     copy_step: int = 25
+    switch_prob: float = 0.25

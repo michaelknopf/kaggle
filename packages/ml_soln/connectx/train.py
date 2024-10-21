@@ -1,17 +1,14 @@
 import logging
 from dataclasses import dataclass
 
+import numpy as np
 from keras import Model
+from rich import progress as pg
 
 from ml_soln.common.sagemaker_utils import sm_utils
 from ml_soln.connectx import ctx
-
-import numpy as np
-from rich import progress as pg
-
-from ml_soln.connectx.connect_x_gym import ConnectXObservation
 from ml_soln.connectx.dqn import DQN, Experience
-
+from ml_soln.connectx.stubs import ConnectXObservation
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +21,9 @@ class TrainState:
 
 
 class Trainer:
+
+    def __init__(self):
+        self.iteration = 0
 
     def train(self,
               train_model: Model = None,
@@ -59,7 +59,11 @@ class Trainer:
                 pg.TextColumn("[bold green]Episode Reward: {task.fields[episode_reward]:>2.0f}"),
                 pg.TextColumn("[bold red]Epsilon: {task.fields[epsilon]:>3.3f}"),
             )
-            task = progress.add_task('Training', total=ctx().hyperparams.episodes)
+            task = progress.add_task('Training',
+                                     total=ctx().hyperparams.episodes,
+                                     avg_reward=0,
+                                     episode_reward=0,
+                                     epsilon=epsilon)
             progress.start()
         else:
             progress = None
@@ -92,15 +96,17 @@ class Trainer:
 
         return ts
 
-    @staticmethod
-    def play_game(train_dqn: DQN,
+    def play_game(self,
+                  train_dqn: DQN,
                   target_dqn: DQN,
                   epsilon: float):
 
         rewards = 0
-        iteration = 0
         done = False
-        observation: ConnectXObservation = ctx().connect_x_gym.reset()
+
+        trainer = ctx().connect_x_gym.new_trainer()
+        observation: ConnectXObservation = trainer.reset()
+        self.fix_observation(observation)
 
         while not done:
             # Using epsilon-greedy to get an action
@@ -110,7 +116,8 @@ class Trainer:
             prev_observation = observation
 
             # Take action
-            observation, reward, done, agent_info = ctx().connect_x_gym.step(action)
+            observation, reward, done, agent_info = trainer.step(action)
+            self.fix_observation(observation)
 
             # Apply new rules
             if done:
@@ -124,7 +131,7 @@ class Trainer:
                 else:
                     reward = 10
             else:
-                # Try to prevent the agent from taking a long move
+                # Penalize longer games
                 reward = -0.05
 
             rewards += reward
@@ -139,9 +146,19 @@ class Trainer:
 
             # Train the training model by using experiences in buffer and the target model
             train_dqn.train(target_dqn)
-            iteration += 1
-            if iteration % ctx().hyperparams.copy_step == 0:
+            self.iteration += 1
+            if self.iteration % ctx().hyperparams.copy_step == 0:
                 # Update the weights of the target model when reaching enough "copy step"
                 target_dqn.copy_weights(train_dqn)
 
         return rewards
+
+    @staticmethod
+    def fix_observation(observation: ConnectXObservation):
+        """
+        Kaggle env uses this "struct" object that tries to make a dict behave like an object.
+        Due to a bug, it is not working correctly when our agent is the 2nd player.
+        This patches the issue.
+        """
+        observation.__dict__['board'] = observation['board']
+        observation.__dict__['mark'] = observation['mark']
