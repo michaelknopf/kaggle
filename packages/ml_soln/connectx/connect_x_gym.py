@@ -9,6 +9,7 @@ class ConnectXGym:
 
     def __init__(self):
         self.player_order = 1
+        self.opponent_index = -1
 
     def new_trainer(self) -> KaggleTrainer:
         self._roll_player_order()
@@ -39,10 +40,27 @@ class ConnectXGym:
 
     def _choose_opponent(self):
         r = random.random()
-        if r < .7:
+
+        # no opponent set yet
+        if self.opponent_index == -1:
+            switch_prob = 1
+        # model
+        elif self.opponent_index == 0:
+            switch_prob = .2
+        # negamax - don't stay on negamax for too long because it is computationally expensive
+        elif self.opponent_index == 1:
+            switch_prob = .75
+        else:
+            raise ValueError(f"Invalid opponent index: {self.opponent_index}")
+
+        # keep same opponent
+        if r > switch_prob:
+            return
+
+        self.opponent_index = (self.opponent_index + 1) % 2
+
+        if self.opponent_index == 0:
             self.opponent = self._new_model_agent()
-        elif r < .9:
-            self.opponent = 'random'
         else:
             self.opponent = 'negamax'
 

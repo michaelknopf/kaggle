@@ -1,5 +1,6 @@
 import logging
 from dataclasses import dataclass
+from typing import Callable
 
 import numpy as np
 from keras import Model
@@ -22,21 +23,22 @@ class TrainState:
 
 class Trainer:
 
-    def __init__(self):
+    def __init__(self,
+                 train_model: Model = None,
+                 target_model: Model = None):
         self.iteration = 0
-
-    def train(self,
-              train_model: Model = None,
-              target_model: Model = None):
-
         if not train_model:
-            train_model = ctx().model.model
+            train_model: Model = ctx().model.model
         if not target_model:
-            target_model = ctx().model.new_model()
+            target_model: Model = ctx().model.new_model()
+        self.train_model = train_model
+        self.target_model = target_model
+        self.epsilon = ctx().hyperparams.start_epsilon
+        self.train_dqn: DQN = DQN(train_model)
+        self.target_dqn: DQN = DQN(target_model)
+        self.__init_progress_bar()
 
-        train_dqn: DQN = DQN(train_model)
-        target_dqn: DQN = DQN(target_model)
-
+    def train(self):
         ts = TrainState(all_total_rewards=np.empty(ctx().hyperparams.episodes),
                         all_avg_rewards=np.empty(ctx().hyperparams.episodes),
                         all_epsilons=np.empty(ctx().hyperparams.episodes))
@@ -45,29 +47,7 @@ class Trainer:
 
         # Initialize the rich progress bar
         if not sm_utils.is_sagemaker:
-            progress = pg.Progress(
-                pg.TextColumn("[bold blue]{task.description}"),
-                pg.BarColumn(),
-                pg.TextColumn("[green]Episode"),
-                pg.MofNCompleteColumn(),
-                pg.TaskProgressColumn(),
-                pg.TextColumn("[cyan]Time elapsed: "),
-                pg.TimeElapsedColumn(),
-                pg.TextColumn("[cyan]Time remaining: "),
-                pg.TimeRemainingColumn(),
-                pg.TextColumn("[bold blue]Average Reward: {task.fields[avg_reward]:>3.1f}"),
-                pg.TextColumn("[bold green]Episode Reward: {task.fields[episode_reward]:>2.0f}"),
-                pg.TextColumn("[bold red]Epsilon: {task.fields[epsilon]:>3.3f}"),
-            )
-            task = progress.add_task('Training',
-                                     total=ctx().hyperparams.episodes,
-                                     avg_reward=0,
-                                     episode_reward=0,
-                                     epsilon=epsilon)
-            progress.start()
-        else:
-            progress = None
-            task = None
+            self.progress.start()
 
         for n in range(ctx().hyperparams.episodes):
             epsilon = max(ctx().hyperparams.min_epsilon,
@@ -77,7 +57,7 @@ class Trainer:
                 logger.info(f'Starting game {n}')
 
             # play an episode
-            total_reward = self.play_game(train_dqn, target_dqn, epsilon)
+            total_reward = self.play_game(self.train_dqn, self.target_dqn, epsilon)
 
             ts.all_total_rewards[n] = total_reward
             avg_reward = ts.all_total_rewards[max(0, n - 100):(n + 1)].mean()
@@ -85,14 +65,14 @@ class Trainer:
             ts.all_epsilons[n] = epsilon
 
             if not sm_utils.is_sagemaker:
-                progress.update(task,
-                                advance=1,
-                                episode_reward=total_reward,
-                                avg_reward=avg_reward,
-                                epsilon=epsilon)
+                self.progress.update(self.task,
+                                     advance=1,
+                                     episode_reward=total_reward,
+                                     avg_reward=avg_reward,
+                                     epsilon=epsilon)
 
         if not sm_utils.is_sagemaker:
-            progress.stop()
+            self.progress.stop()
 
         return ts
 
@@ -162,3 +142,29 @@ class Trainer:
         """
         observation.__dict__['board'] = observation['board']
         observation.__dict__['mark'] = observation['mark']
+
+    def __init_progress_bar(self):
+        if sm_utils.is_sagemaker:
+            self.progress = None
+            self.task = None
+            return
+
+        self.progress = pg.Progress(
+            pg.TextColumn("[bold blue]{task.description}"),
+            pg.BarColumn(),
+            pg.TextColumn("[green]Episode"),
+            pg.MofNCompleteColumn(),
+            pg.TaskProgressColumn(),
+            pg.TextColumn("[cyan]Time elapsed: "),
+            pg.TimeElapsedColumn(),
+            pg.TextColumn("[cyan]Time remaining: "),
+            pg.TimeRemainingColumn(),
+            pg.TextColumn("[bold blue]Average Reward: {task.fields[avg_reward]:>3.1f}"),
+            pg.TextColumn("[bold green]Episode Reward: {task.fields[episode_reward]:>2.0f}"),
+            pg.TextColumn("[bold red]Epsilon: {task.fields[epsilon]:>3.3f}"),
+        )
+        self.task = self.progress.add_task('Training',
+                                           total=ctx().hyperparams.episodes,
+                                           avg_reward=0,
+                                           episode_reward=0,
+                                           epsilon=self.epsilon)
