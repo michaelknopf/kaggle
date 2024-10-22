@@ -14,14 +14,21 @@ def model_agent(model: Model):
         >>> ctx().kaggle_env.run([model_agent(model), 'random'])
         """
 
+        board = np.array(observation.board)
+        board = np.expand_dims(board, axis=0)
+
         # add dimension for the "mark" representing which player's turn it is
-        state = observation.board + [observation.mark]
+        # state = observation.board + [observation.mark]
+        inputs = {
+            'board': board,
+            'mark': np.array([observation.mark])
+        }
 
-        x = np.array(state, dtype=np.float32)
+        # x = np.array(state, dtype=np.float32)
         # add batch dimension of 1
-        x = np.expand_dims(x, axis=0)
+        # x = np.expand_dims(x, axis=0)
 
-        y = model.predict(x)
+        y = model.predict(inputs)
 
         # Downgrade all illegal moves to be the lowest value in the array
         new_min = np.min(y) - 1

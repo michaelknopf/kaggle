@@ -14,7 +14,7 @@ class Context(BaseContext):
 
     @cached_property
     def kaggle_env(self):
-        return make('connectx', debug=True)
+        return make('connectx')
 
     @cached_property
     def connect_x_gym(self):

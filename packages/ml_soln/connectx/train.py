@@ -109,10 +109,9 @@ class Trainer:
                     reward = -20
                 # Draw
                 else:
-                    reward = 10
+                    reward = -5
             else:
-                # Penalize longer games
-                reward = -0.05
+                reward = 0
 
             rewards += reward
 

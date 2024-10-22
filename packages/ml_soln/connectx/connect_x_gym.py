@@ -44,6 +44,7 @@ class ConnectXGym:
         # no opponent set yet
         if self.opponent_index == -1:
             switch_prob = 1
+
         # model
         elif self.opponent_index == 0:
             switch_prob = .2
