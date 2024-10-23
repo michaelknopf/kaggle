@@ -9,7 +9,7 @@ from keras.src.optimizers import Adam
 
 from ml_soln.common.dataclass_utils import DictClassMixin
 from ml_soln.connectx import ctx
-from ml_soln.connectx.connect_x_gym import ConnectXObservation
+from ml_soln.connectx.stubs import ConnectXObservation
 
 
 @dataclass
@@ -54,8 +54,6 @@ class DQN:
         self.min_experiences = ctx().hyperparams.min_experiences
 
     def predict(self, inputs):
-        inputs = inputs.astype('float32')
-        inputs = np.atleast_2d(inputs)
         return self.model(inputs)
 
     def train(self, target_dqn):
@@ -66,14 +64,15 @@ class DQN:
         # Randomly select a batch of experiences from the buffer
         experiences: List[Experience] = random.sample(self.experiences, k=self.batch_size)
 
-        states = np.array([self.pre_process(e.state) for e in experiences])
+        states = self.pre_process_batch([e.state for e in experiences])
         actions = np.array([e.action for e in experiences])
         rewards = np.array([e.reward for e in experiences])
 
         # Prepare labels for training process
-        next_states = np.array([self.pre_process(e.next_state) for e in experiences])
+        next_states = self.pre_process_batch([e.next_state for e in experiences])
         dones = np.array([e.done for e in experiences])
-        target_next_move_probs = np.max(target_dqn.predict(next_states), axis=1)
+        next_states_prediction = target_dqn.predict(next_states)
+        target_next_move_probs = np.max(next_states_prediction, axis=1)
         actual_values = np.where(dones,
                                  rewards,
                                  rewards + self.gamma * target_next_move_probs)
@@ -105,7 +104,7 @@ class DQN:
 
     def predict_move(self, state):
         board_and_mark = self.pre_process(state)
-        prediction = self.predict(np.atleast_2d(board_and_mark))[0].numpy()
+        prediction = self.predict(board_and_mark)[0].numpy()
 
         # make illegal moves have the lowest value
         new_min = np.min(prediction) - 1
@@ -139,9 +138,44 @@ class DQN:
     def load_weights(self, path):
         self.model.load_weights(path)
 
-    @staticmethod
-    def pre_process(state: ConnectXObservation):
+    @classmethod
+    def pre_process(cls, state: ConnectXObservation):
         """
         Add the mark to the board, indicating which player's turn it is.
         """
-        return state.board + [state.mark]
+        board = cls.pre_process_board(state.board)
+        board = np.atleast_2d(board)
+
+        mark = cls.pre_process_mark(state.mark)
+        mark = np.atleast_2d(mark)
+
+        return {
+            'board': board,
+            'mark': mark,
+        }
+
+    @classmethod
+    def pre_process_board(cls, board: List[int]):
+        result = np.asarray(board)
+        result = result.astype('float16')
+        return result
+
+    @classmethod
+    def pre_process_mark(cls, mark: int):
+        result = np.asarray(mark)
+        result = result.astype('float16')
+        return result
+
+    @classmethod
+    def pre_process_batch(cls, states: List[ConnectXObservation]):
+        board = [cls.pre_process_board(state.board) for state in states]
+        board = np.array(board)
+        board = np.atleast_2d(board)
+
+        mark = [cls.pre_process_mark(state.mark) for state in states]
+        mark = np.array(mark)
+
+        return {
+            'board': board,
+            'mark': mark
+        }

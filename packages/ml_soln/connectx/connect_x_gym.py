@@ -1,39 +1,69 @@
-from typing import List, Tuple
+import random
 
-from kaggle_environments.helpers import Observation, Configuration
-from kaggle_environments.utils import Struct
+from ml_soln.connectx import ctx
+from ml_soln.connectx.agent import model_agent
+from ml_soln.connectx.stubs import KaggleTrainer
 
 
-class ConnectXObservation(Observation, Struct):
+class ConnectXGym:
 
-    def __init__(self,
-                 mark: int,
-                 board: List[int]):
-        super().__init__()
-        # The current serialized Board (rows x columns).
-        self.board = board
-        # Which player the agent is playing as (1 or 2).
-        self.mark = mark
+    def __init__(self):
+        self.player_order = 1
+        self.opponent_index = -1
 
-class ConnectXConfiguration(Configuration, Struct):
+    def new_trainer(self) -> KaggleTrainer:
+        self._roll_player_order()
+        self._choose_opponent()
+        agents = self._agent_pair()
+        return ctx().kaggle_env.train(agents)
 
-    def __init__(self,
-                 columns: int,
-                 rows: int,
-                 inarow: int):
-        super().__init__()
-        self.columns = columns
-        self.rows = rows
-        self.inarow = inarow
+    @staticmethod
+    def _new_model_agent():
+        # create a fresh model to use as the opponent agent
+        new_model = ctx().model.new_model()
 
-class AgentInfo(Struct):
-    pass
+        # copy parameter values from the model under training to the new model
+        trained_model = ctx().model.model
+        trained_vars = trained_model.trainable_variables
+        new_vars = new_model.trainable_variables
+        for trained_var, empty_var in zip(trained_vars, new_vars):
+            empty_var.assign(trained_var.numpy())
 
-class KaggleTrainer:
+        return model_agent(new_model)
 
-    # agent.observation, reward, agent.status != "ACTIVE", agent.info
-    def step(self, action: str) -> Tuple[Observation, float, bool, AgentInfo]:
-        pass
+    def _roll_player_order(self):
+        if random.random() < ctx().hyperparams.switch_prob:
+            self._switch_player_order()
 
-    def reset(self) -> Observation:
-        pass
+    def _switch_player_order(self):
+        self.player_order *= -1
+
+    def _choose_opponent(self):
+        r = random.random()
+
+        # no opponent set yet
+        if self.opponent_index == -1:
+            switch_prob = 1
+
+        # model
+        elif self.opponent_index == 0:
+            switch_prob = .2
+        # negamax - don't stay on negamax for too long because it is computationally expensive
+        elif self.opponent_index == 1:
+            switch_prob = .75
+        else:
+            raise ValueError(f"Invalid opponent index: {self.opponent_index}")
+
+        # keep same opponent
+        if r > switch_prob:
+            return
+
+        self.opponent_index = (self.opponent_index + 1) % 2
+
+        if self.opponent_index == 0:
+            self.opponent = self._new_model_agent()
+        else:
+            self.opponent = 'negamax'
+
+    def _agent_pair(self):
+        return [None, self.opponent][::self.player_order]
